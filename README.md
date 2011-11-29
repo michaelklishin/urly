@@ -21,7 +21,7 @@ With Leiningen
 
     [clojurewerkz/urly "1.0.0-SNAPSHOT"]
 
-New snapshots are published to clojars.org every day (if there are any changes).
+New snapshots are [published to clojars.org](https://clojars.org/clojurewerkz/urly) every day (if there are any changes).
 
 
 ### clojurewerkz.urly.UrlLike
