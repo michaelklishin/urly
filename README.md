@@ -37,6 +37,19 @@ TBD
 Urly is a Work In Progress. Please see our test suite for code examples.
 
 
+## Continuous Integration
+
+[![Continuous Integration status](https://secure.travis-ci.org/michaelklishin/urly.png)](http://travis-ci.org/michaelklishin/urly)
+
+
+CI is hosted by [travis-ci.org](http://travis-ci.org)
+
+
+## Supported Clojure versions
+
+Urly is built from the ground up for Clojure 1.3 and up.
+
+
 ## License
 
 Copyright (C) 2011 Michael S. Klishin
