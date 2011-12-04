@@ -7,12 +7,20 @@
 
 (deftest test-path-normalization
   (doseq [s ["" "/" nil]]
-    (is (= "" (UrlLike/normalizePath s)))))
+    (is (= "" (UrlLike/normalizePath s))))
+  (is (= "/login" (UrlLike/normalizePath "/LOGIN"))))
+
+(deftest test-protocol-normalization
+  (is (= "https" (UrlLike/normalizePath "HTTpS"))))
+
 
 
 (deftest test-instantiating-url-like-from-uri1
   (let [uri      (URI. "http://apple.com/iphone")
-        url-like (UrlLike/fromURI uri)]
+        url-like (UrlLike/fromURI uri)
+        host     "apple.com"]
+    (is (= host             (.getHost uri)))
+    (is (= host             (.getHost url-like)))
     (is (= (.getScheme uri) (.getScheme   url-like)))
     (is (= (.getScheme uri) (.getProtocol url-like)))
     (is (= (.getHost uri)   (.getHost url-like)))
@@ -23,12 +31,50 @@
 (deftest test-instantiating-url-like-from-uri
   (let [uri       (URI. "http://blahblah.smackernews.org")
         url-like  (UrlLike/fromURI uri)
-        path      ""]
+        path      ""
+        host      "blahblah.smackernews.org"]
+    (is (= host      (.getHost uri)))
+    (is (= host      (.getHost url-like)))
     (is (= path      (.getPath uri)))
     (is (= path      (.getPath url-like)))
     (is (nil? (.getQuery uri)))
     (is (nil? (.getQuery url-like)))
-    (is (= ""  (.getPath uri)))
+    (is (nil?  (.getRef url-like)))
+    (is (nil?  (.getFragment url-like)))))
+
+(deftest test-instantiating-url-like-from-https-uri
+  (let [uri       (URI. "HTTPS://blahblah.smackernews.org")
+        url-like  (UrlLike/fromURI uri)
+        path      ""
+        host      "blahblah.smackernews.org"
+        protocol  "https"]
+    (is (= "HTTPS"   (.getScheme uri)))
+    (is (= protocol  (.getScheme url-like)))
+    (is (= protocol  (.getProtocol url-like)))
+    (is (= host      (.getHost uri)))
+    (is (= host      (.getHost url-like)))
+    (is (= path      (.getPath uri)))
+    (is (= path      (.getPath url-like)))
+    (is (nil? (.getQuery uri)))
+    (is (nil? (.getQuery url-like)))
+    (is (nil?  (.getRef url-like)))
+    (is (nil?  (.getFragment url-like)))))
+
+(deftest test-instantiating-url-like-from-relative-uri
+  (let [uri       (URI. "/LOGIN")
+        url-like  (UrlLike/fromURI uri)
+        path      "/login"
+        host      nil
+        protocol  nil]
+    (is (= protocol  (.getScheme uri)))
+    (is (= protocol  (.getScheme url-like)))
+    (is (= protocol  (.getProtocol url-like)))
+    (is (= host      (.getHost uri)))
+    (is (= host      (.getHost url-like)))
+    (is (= "/LOGIN"  (.getPath uri)))
+    (is (= path      (.getPath url-like)))
+    (is (nil? (.getQuery uri)))
+    (is (nil? (.getQuery url-like)))
     (is (nil?  (.getRef url-like)))
     (is (nil?  (.getFragment url-like)))))
 

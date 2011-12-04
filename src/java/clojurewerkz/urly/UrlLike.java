@@ -80,18 +80,26 @@ public class UrlLike {
 
 
   public static UrlLike fromURI(URI uri) {
-    return new UrlLike(uri.getScheme(), uri.getUserInfo(), uri.getHost(), uri.getPort(), normalizePath(uri.getPath()), uri.getQuery(), uri.getFragment());
+    return new UrlLike(normalizeProtocol(uri.getScheme()), uri.getUserInfo(), uri.getHost(), uri.getPort(), normalizePath(uri.getPath()), uri.getQuery(), uri.getFragment());
   }
 
   public static UrlLike fromURL(URL url) {
-    return new UrlLike(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), normalizePath(url.getPath()), url.getQuery(), url.getRef());
+    return new UrlLike(normalizeProtocol(url.getProtocol()), url.getUserInfo(), url.getHost(), url.getPort(), normalizePath(url.getPath()), url.getQuery(), url.getRef());
+  }
+
+  private static String normalizeProtocol(String s) {
+    if (s == null) {
+      return null;
+    } else {
+      return s.toLowerCase();
+    }
   }
 
   public static String normalizePath(String path) {
     if ((path == null) || SLASH.equals(path) || BLANK_STRING.equals(path)) {
       return BLANK_STRING;
     } else {
-      return path;
+      return path.toLowerCase();
     }
   }
 }
