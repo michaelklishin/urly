@@ -5,26 +5,31 @@
 package clojurewerkz.urly;
 
 import java.net.URI;
+import java.net.URL;
 
 public class UrlLike {
   private String protocol;
   private String userInfo;
   private String authority;
   private String host;
-  private int    port;
+  private int port;
 
   private String path;
   private String query;
   private String fragment;
 
 
+  private static final String SLASH = "/";
+  private static final String BLANK_STRING = "";
+
+
   protected UrlLike(String scheme, String userInfo, String host, int port, String path, String query, String fragment) {
     this.protocol = scheme;
     this.userInfo = userInfo;
-    this.host     = host;
-    this.port     = port;
-    this.path     = path;
-    this.query    = query;
+    this.host = host;
+    this.port = port;
+    this.path = path;
+    this.query = query;
     this.fragment = fragment;
   }
 
@@ -60,6 +65,7 @@ public class UrlLike {
   public String getProtocol() {
     return protocol;
   }
+
   public String getScheme() {
     return protocol;
   }
@@ -74,6 +80,18 @@ public class UrlLike {
 
 
   public static UrlLike fromURI(URI uri) {
-    return new UrlLike(uri.getScheme(), uri.getUserInfo(), uri.getHost(), uri.getPort(), uri.getPath(), uri.getQuery(), uri.getFragment());
+    return new UrlLike(uri.getScheme(), uri.getUserInfo(), uri.getHost(), uri.getPort(), normalizePath(uri.getPath()), uri.getQuery(), uri.getFragment());
+  }
+
+  public static UrlLike fromURL(URL url) {
+    return new UrlLike(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), normalizePath(url.getPath()), url.getQuery(), url.getRef());
+  }
+
+  public static String normalizePath(String path) {
+    if ((path == null) || SLASH.equals(path) || BLANK_STRING.equals(path)) {
+      return BLANK_STRING;
+    } else {
+      return path;
+    }
   }
 }
