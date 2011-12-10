@@ -15,6 +15,14 @@
 
 
 
+(deftest test-host-of
+  (is (= "clojure.org" (host-of (URI. "http://clojure.org"))))
+  (is (= "www.clojure.org" (host-of (URI. "https://Www.clojure.org"))))
+  (is (= "clojure.org" (host-of "http://clojure.org")))
+  (is (= "clojure.org" (host-of "https://CLOJURE.org"))))
+
+
+
 (deftest test-instantiating-url-like-from-uri1
   (let [uri      (URI. "http://apple.com/iphone")
         url-like (UrlLike/fromURI uri)
