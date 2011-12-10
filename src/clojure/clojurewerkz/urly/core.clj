@@ -18,7 +18,13 @@
 
 
 (defprotocol PartsAccessors
-  (^String host-of [input] "Returns host of given input"))
+  (^String protocol-of  [input] "Returns protocol of given input")
+  (^String host-of      [input] "Returns host of given input")
+  (^String port-of      [input] "Returns port of given input")
+  (^String user-info-of [input] "Returns user information of given input")
+  (^String path-of      [input] "Returns path of given input")
+  (^String query-of     [input] "Returns query string of given input")
+  (^String fragment-of  [input] "Returns fragment of given input"))
 
 
 (extend-protocol PartsAccessors
