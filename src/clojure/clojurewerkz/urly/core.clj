@@ -1,4 +1,5 @@
 (ns clojurewerkz.urly.core
+  (:refer-clojure :exclude [resolve])
   (:import [clojurewerkz.urly UrlLike]
            [java.net URI URL]))
 
@@ -79,3 +80,29 @@
     (query-of (URI. input)))
   (fragment-of [^String input]
     (fragment-of (URI. input))))
+
+
+;; protocols dispatch on the 1st argument, here we need to dispatch on
+;; first two. MK.
+(defmulti  resolve (fn [base other] [(type base) (type other)]))
+(defmethod resolve [java.net.URI java.net.URI]
+  [base other]
+  (.resolve ^URI base ^URI other))
+(defmethod resolve [java.net.URI String]
+  [base other]
+  (.resolve ^URI base ^String other))
+(defmethod resolve [java.net.URI java.net.URL]
+  [base other]
+  (.resolve ^URI base (.toURI ^URL other)))
+(defmethod resolve [String java.net.URI]
+  [base other]
+  (.resolve (URI. base) ^URI other))
+(defmethod resolve [String String]
+  [base other]
+  (.resolve (URI. base) (URI. other)))
+(defmethod resolve [String String]
+  [base other]
+  (.resolve (URI. base) (URI. other)))
+(defmethod resolve [String java.net.URL]
+  [base other]
+  (.resolve (URI. base) (.toURI ^URL other)))

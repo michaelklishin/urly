@@ -1,4 +1,5 @@
 (ns clojurewerkz.urly.test.core
+  (:refer-clojure :exclude [resolve])
   (:use [clojurewerkz.urly.core]
         [clojure.test])
   (:import [java.net URI URL]
@@ -60,6 +61,17 @@
   (is (= "doc"           (fragment-of (URL. "https://Www.clojure.org/?search=some#doc"))))
   (is (= "!/a/path/"     (fragment-of "https://TWITTER.com/#!/a/path/"))))
 
+
+;;
+;; resolution
+;;
+
+(deftest test-resolve
+  (is (= (resolve (URI. "http://clojure.org") (URI. "/Protocols"))                   (URI. "http://clojure.org/Protocols")))
+  (is (= (resolve (URI. "http://clojure.org") "/Protocols")                          (URI. "http://clojure.org/Protocols")))
+  (is (= (resolve (URI. "http://clojure.org") (URL. "http://clojure.org/Protocols")) (URI. "http://clojure.org/Protocols")))
+  (is (= (resolve "http://clojure.org"        (URI. "/Protocols"))                   (URI. "http://clojure.org/Protocols")))
+  (is (= (resolve "http://clojure.org"        (URL. "http://clojure.org/Protocols")) (URI. "http://clojure.org/Protocols"))))
 
 
 ;;
