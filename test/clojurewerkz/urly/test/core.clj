@@ -14,14 +14,57 @@
   (is (= "https" (UrlLike/normalizePath "HTTpS"))))
 
 
+;;
+;; Parts accessors
+;;
+
+(deftest test-protocol-of
+  (is (= "http"  (protocol-of (URI. "http://clojure.org"))))
+  (is (= "https" (protocol-of (URL. "htTPS://Www.clojure.org"))))
+  (is (= "http"  (protocol-of "http://clojure.org")))
+  (is (= "https" (protocol-of "HTTPS://CLOJURE.org"))))
 
 (deftest test-host-of
-  (is (= "clojure.org" (host-of (URI. "http://clojure.org"))))
-  (is (= "www.clojure.org" (host-of (URI. "https://Www.clojure.org"))))
-  (is (= "clojure.org" (host-of "http://clojure.org")))
-  (is (= "clojure.org" (host-of "https://CLOJURE.org"))))
+  (is (= "clojure.org"     (host-of (URI. "http://clojure.org"))))
+  (is (= "www.clojure.org" (host-of (URL. "https://Www.clojure.org"))))
+  (is (= "clojure.org"     (host-of "http://clojure.org")))
+  (is (= "clojure.org"     (host-of "https://CLOJURE.org"))))
+
+(deftest test-port-of
+  (is (= -1   (port-of (URI. "http://clojure.org"))))
+  (is (= 7474 (port-of (URL. "https://Www.clojure.org:7474"))))
+  (is (= 443  (port-of "http://clojure.org:443")))
+  (is (= -1   (port-of "https://CLOJURE.org"))))
+
+(deftest test-user-info-of
+  (is (nil?            (user-info-of (URI. "http://clojure.org"))))
+  (is (= "guest:guest" (user-info-of (URL. "https://guest:guest@Www.clojure.org:7474"))))
+  (is (= "guest:"      (user-info-of "http://guest:@clojure.org:443")))
+  (is (nil?            (user-info-of "https://CLOJURE.org"))))
+
+(deftest test-path-of
+  (is (= ""           (path-of (URI. "http://clojure.org"))))
+  (is (= ""           (path-of (URL. "https://Www.clojure.org/"))))
+  (is (= "/protocols" (path-of "http://clojure.org/Protocols")))
+  (is (= ""           (path-of "https://TWITTER.com/#!/a/path/"))))
+
+(deftest test-query-of
+  (is (nil?              (query-of (URI. "http://clojure.org"))))
+  (is (= ""              (query-of (URL. "https://Www.clojure.org/?"))))
+  (is (= "query=clojure" (query-of "http://google.com/search?query=clojure")))
+  (is (nil?              (query-of "https://TWITTER.com/#!/a/path/"))))
+
+(deftest test-fragment-of
+  (is (nil?              (fragment-of (URI. "http://clojure.org"))))
+  (is (= ""              (fragment-of (URL. "https://Www.clojure.org/#"))))
+  (is (= "doc"           (fragment-of (URL. "https://Www.clojure.org/?search=some#doc"))))
+  (is (= "!/a/path/"     (fragment-of "https://TWITTER.com/#!/a/path/"))))
 
 
+
+;;
+;; UrlLike
+;;
 
 (deftest test-instantiating-url-like-from-uri1
   (let [uri      (URI. "http://apple.com/iphone")

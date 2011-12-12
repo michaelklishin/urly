@@ -29,15 +29,53 @@
 
 (extend-protocol PartsAccessors
   URI
+  (protocol-of [^URI input]
+    (-> input .getScheme .toLowerCase))
   (host-of [^URI input]
     (-> input .getHost .toLowerCase))
+  (port-of [^URI input]
+    (.getPort input))
+  (user-info-of [^URI input]
+    (.getUserInfo input))
+  (path-of [^URI input]
+    (UrlLike/normalizePath (.getPath input)))
+  (query-of [^URI input]
+    (.getQuery input))
+  (fragment-of [^URI input]
+    (.getFragment input))
+
 
   URL
+  (protocol-of [^URL input]
+    (-> input .getProtocol .toLowerCase))
   (host-of [^URL input]
     (-> input .getHost .toLowerCase))
+  (port-of [^URL input]
+    (.getPort input))
+  (user-info-of [^URL input]
+    (.getUserInfo input))
+  (path-of [^URL input]
+    (UrlLike/normalizePath (.getPath input)))
+  (query-of [^URL input]
+    (.getQuery input))
+  (fragment-of [^URL input]
+    (.getRef input))
+
 
   String
+  ;; TODO: switch to UrlLike once it supports
+  ;;       strings + most of edge cases
+  (protocol-of [^String input]
+    (protocol-of (URI. input)))
   (host-of [^String input]
-    ;; TODO: switch to UrlLike once it supports
-    ;;       strings + most of edge cases
-    (host-of (URI. input))))
+    (host-of (URI. input)))
+  (port-of [^String input]
+    (port-of (URI. input)))
+  (user-info-of [^String input]
+    (user-info-of (URI. input)))
+  (path-of [^String input]
+    (path-of (URI. input)))
+  (query-of [^String input]
+    (query-of (URI. input)))
+  (fragment-of [^String input]
+    (fragment-of (URI. input))))
