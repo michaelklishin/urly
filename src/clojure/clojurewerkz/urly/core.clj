@@ -106,3 +106,24 @@
 (defmethod resolve [String java.net.URL]
   [base other]
   (.resolve (URI. base) (.toURI ^URL other)))
+
+
+
+(defprotocol IsAbsolute
+  (absolute? [input] "Returns true if this URI/URL is absolute"))
+
+(extend-protocol IsAbsolute
+  URI
+  (absolute? [^URI input]
+    (.isAbsolute input))
+
+  URL
+  (absolute? [^URL input]
+    (absolute? (.toURI input)))
+
+  String
+  (absolute? [^String input]
+    (absolute? (URI. input))))
+
+
+(def relative? (complement absolute?))

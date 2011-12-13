@@ -73,6 +73,17 @@
   (is (= (resolve "http://clojure.org"        (URI. "/Protocols"))                   (URI. "http://clojure.org/Protocols")))
   (is (= (resolve "http://clojure.org"        (URL. "http://clojure.org/Protocols")) (URI. "http://clojure.org/Protocols"))))
 
+(deftest test-absolute?
+  (is (absolute? (URI. "http://clojure.org")))
+  (is (absolute? (URI. "http://clojure.org/Protocols")))
+  (is (not (absolute? (URI. "//clojure.org"))))
+  (is (not (absolute? (URI. "/Protocols"))))
+  (is (absolute? (URL. "http://clojure.org")))
+  (is (absolute? (URL. "http://clojure.org/Protocols")))
+  (is (absolute? "http://clojure.org"))
+  (is (absolute? "http://clojure.org/Protocols"))
+  (is (not (absolute? "//clojure.org")))
+  (is (not (absolute? "/Protocols"))))
 
 ;;
 ;; UrlLike
