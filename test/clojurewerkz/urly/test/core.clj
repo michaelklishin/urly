@@ -85,6 +85,18 @@
   (is (not (absolute? "//clojure.org")))
   (is (not (absolute? "/Protocols"))))
 
+(deftest test-relative?
+  (is (not (relative? (URI. "http://clojure.org"))))
+  (is (not (relative? (URI. "http://clojure.org/Protocols"))))
+  (is (relative? (URI. "//clojure.org")))
+  (is (relative? (URI. "/Protocols")))
+  (is (not (relative? (URL. "http://clojure.org"))))
+  (is (not (relative? (URL. "http://clojure.org/Protocols"))))
+  (is (not (relative? "http://clojure.org")))
+  (is (not (relative? "http://clojure.org/Protocols")))
+  (is (relative? "//clojure.org"))
+  (is (relative? "/Protocols")))
+
 ;;
 ;; UrlLike
 ;;
