@@ -74,28 +74,32 @@
   (is (= (resolve "http://clojure.org"        (URL. "http://clojure.org/Protocols")) (URI. "http://clojure.org/Protocols"))))
 
 (deftest test-absolute?
-  (is (absolute? (URI. "http://clojure.org")))
-  (is (absolute? (URI. "http://clojure.org/Protocols")))
-  (is (not (absolute? (URI. "//clojure.org"))))
-  (is (not (absolute? (URI. "/Protocols"))))
-  (is (absolute? (URL. "http://clojure.org")))
-  (is (absolute? (URL. "http://clojure.org/Protocols")))
-  (is (absolute? "http://clojure.org"))
-  (is (absolute? "http://clojure.org/Protocols"))
-  (is (not (absolute? "//clojure.org")))
-  (is (not (absolute? "/Protocols"))))
+  (are [input] (is (absolute? input))
+       (URI. "http://clojure.org")
+       (URI. "http://clojure.org/Protocols")
+       (URL. "http://clojure.org")
+       (URL. "http://clojure.org/Protocols")
+       "http://clojure.org"
+       "http://clojure.org/Protocols")
+  (are [input] (is (not (absolute? input)))
+       (URI. "//clojure.org")
+       (URI. "/Protocols")
+       "//clojure.org"
+       "/Protocols"))
 
 (deftest test-relative?
-  (is (not (relative? (URI. "http://clojure.org"))))
-  (is (not (relative? (URI. "http://clojure.org/Protocols"))))
-  (is (relative? (URI. "//clojure.org")))
-  (is (relative? (URI. "/Protocols")))
-  (is (not (relative? (URL. "http://clojure.org"))))
-  (is (not (relative? (URL. "http://clojure.org/Protocols"))))
-  (is (not (relative? "http://clojure.org")))
-  (is (not (relative? "http://clojure.org/Protocols")))
-  (is (relative? "//clojure.org"))
-  (is (relative? "/Protocols")))
+  (are [input] (is (not (relative? input)))
+       (URI. "http://clojure.org")
+       (URI. "http://clojure.org/Protocols")
+       (URL. "http://clojure.org")
+       (URL. "http://clojure.org/Protocols")
+       "http://clojure.org"
+       "http://clojure.org/Protocols")
+  (are [input] (is (relative? input))
+       (URI. "//clojure.org")
+       (URI. "/Protocols")
+       "//clojure.org"
+       "/Protocols"))
 
 ;;
 ;; UrlLike
