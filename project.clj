@@ -4,5 +4,4 @@
   :dependencies [[org.clojure/clojure "1.3.0"]]
   :source-path        "src/clojure"
   :java-source-path   "src/java"
-  :aot                [clojurewerkz.urly.UrlLike]
   :warn-on-reflection true)
