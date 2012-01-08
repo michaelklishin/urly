@@ -208,11 +208,93 @@
 
 (deftest test-instantiating-url-like-from-url-that-does-end-with-a-slash
   (let [url       (URL. "http://blahblah.smackernews.org/")
-        url-like  (url-like url)]
+        urly      (url-like url)]
     (is (= "/"     (.getPath url)))
-    (is (= ""      (.getPath url-like)))
+    (is (= ""      (.getPath urly)))
     (is (nil? (.getQuery url)))
-    (is (nil? (.getQuery url-like)))
+    (is (nil? (.getQuery urly)))
     (is (nil?  (.getRef url)))
-    (is (nil?  (.getRef url-like)))
-    (is (nil?  (.getFragment url-like)))))
+    (is (nil?  (.getRef urly)))
+    (is (nil?  (.getFragment urly)))))
+
+
+(defn equal-part-by-part
+  [^UrlLike a ^UrlLike b]
+  (is (= (host-of a)      (host-of b)))
+  (is (= (protocol-of a)  (protocol-of b)))
+  (is (= (port-of a)      (port-of b)))
+  (is (= (user-info-of a) (user-info-of b)))
+  (is (= (path-of a)      (path-of b)))
+  (is (= (query-of a)     (query-of b)))
+  (is (= (fragment-of a)  (fragment-of b))))
+
+(deftest test-mutation-of-hostname
+  (let [url       (URL. "http://blahblah.smackernews.org/iphone")
+        urly      (url-like url)
+        expected  (url-like (URL. "http://apple.com/iphone"))
+        mutated   (.mutateHost urly "appLE.com")]
+    (is (equal-part-by-part expected mutated))
+    (is (= (host-of expected)      (host-of (.mutateHostname urly "apple.com"))))))
+
+
+(deftest test-mutation-of-protocol
+  (let [url       (URL. "http://github.com/michaelklishin/urly")
+        urly      (url-like url)
+        expected  (url-like (URL. "https://github.com/michaelklishin/urly"))
+        mutated   (.mutateProtocol urly "hTTps")]
+    (is (equal-part-by-part expected mutated))))
+
+
+(deftest test-mutation-of-port-as-int
+  (let [url       (URL. "https://github.com:434/michaelklishin/urly")
+        urly      (url-like url)
+        expected  (url-like (URL. "https://github.com:443/michaelklishin/urly"))
+        mutated   (.mutatePort urly 443)]
+    (is (equal-part-by-part expected mutated))))
+
+
+(deftest test-mutation-of-port-as-string
+  (let [url       (URL. "https://github.com:434/michaelklishin/urly")
+        urly      (url-like url)
+        expected  (url-like (URL. "https://github.com:443/michaelklishin/urly"))
+        mutated   (.mutatePort urly "443")]
+    (is (equal-part-by-part expected mutated))))
+
+
+(deftest test-mutation-of-user-info-of
+  (let [url       (URL. "https://megacorp.internal")
+        urly      (url-like url)
+        expected  (url-like (URL. "https://guest:GUEST@megacorp.internal"))
+        ;; username is not lowercased because passwords are case-sensitive.
+        mutated   (.mutateUserInfo urly "guest:GUEST")]
+    (is (equal-part-by-part expected mutated))))
+
+(deftest test-mutation-of-path-without-slash
+  (let [url       (URL. "https://github.com/michaelklishin/urly")
+        urly      (url-like url)
+        expected  (url-like (URL. "https://github.com/michaelklishin/monger"))
+        mutated   (.mutatePath urly "michaelklishin/monger")]
+    (is (equal-part-by-part expected mutated))))
+
+(deftest test-mutation-of-path-with-slash
+  (let [url       (URL. "https://github.com/michaelklishin/urly")
+        urly      (url-like url)
+        expected  (url-like (URL. "https://github.com/michaelklishin/monger"))
+        mutated   (.mutatePath urly "/michaelklishin/monger")]
+    (is (equal-part-by-part expected mutated))))
+
+
+(deftest test-mutation-of-query-string
+  (let [url       (URL. "https://secure.travis-ci.org/michaelklishin/urly.png?branch=master")
+        urly      (url-like url)
+        expected  (url-like (URL. "https://secure.travis-ci.org/michaelklishin/urly.png?branch=next"))
+        mutated   (.mutateQuery urly "branch=next")]
+    (is (equal-part-by-part expected mutated))))
+
+
+(deftest test-mutation-of-fragment
+  (let [url       (URL. "https://travis-ci.org/michaelklishin/urly#latest")
+        urly      (url-like url)
+        expected  (url-like (URL. "https://travis-ci.org/michaelklishin/urly#log"))
+        mutated   (.mutateFragment urly "log")]
+    (is (equal-part-by-part expected mutated))))

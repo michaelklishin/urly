@@ -63,6 +63,22 @@
     (.getRef input))
 
 
+  UrlLike
+  (protocol-of [^UrlLike input]
+    (.getProtocol input))
+  (host-of [^UrlLike input]
+    (.getHost input))
+  (port-of [^UrlLike input]
+    (.getPort input))
+  (user-info-of [^UrlLike input]
+    (.getUserInfo input))
+  (path-of [^UrlLike input]
+    (.getPath input))
+  (query-of [^UrlLike input]
+    (.getQuery input))
+  (fragment-of [^UrlLike input]
+    (.getFragment input))
+
   String
   ;; TODO: switch to UrlLike once it supports
   ;;       strings + most of edge cases

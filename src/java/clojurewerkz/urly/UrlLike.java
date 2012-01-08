@@ -87,6 +87,46 @@ public class UrlLike {
     return new UrlLike(normalizeProtocol(url.getProtocol()), url.getUserInfo(), url.getHost(), url.getPort(), normalizePath(url.getPath()), url.getQuery(), url.getRef());
   }
 
+
+
+  public UrlLike mutateHost(String host) {
+    return new UrlLike(this.protocol, this.userInfo, host.toLowerCase(), this.port, this.path, this.query, this.fragment);
+  }
+
+  public UrlLike mutateHostname(String host) {
+    return this.mutateHost(host);
+  }
+
+  public UrlLike mutateProtocol(String protocol) {
+    return new UrlLike(protocol.toLowerCase(), this.userInfo, this.host, this.port, this.path, this.query, this.fragment);
+  }
+
+  public UrlLike mutatePort(int port) {
+    return new UrlLike(this.protocol, this.userInfo, this.host, port, this.path, this.query, this.fragment);
+  }
+
+  public UrlLike mutatePort(String port) {
+    return this.mutatePort(Integer.valueOf(port));
+  }
+
+  public UrlLike mutateUserInfo(String info) {
+    // passwords are case-sensitive so don't lowercase user info. MK.
+    return new UrlLike(this.protocol, info, this.host, this.port, this.path, this.query, this.fragment);
+  }
+
+  public UrlLike mutatePath(String path) {
+    return new UrlLike(this.protocol, this.userInfo, this.host, this.port, maybePrefixSlash(normalizePath(path)), this.query, this.fragment);
+  }
+
+  public UrlLike mutateQuery(String query) {
+    return new UrlLike(this.protocol, this.userInfo, this.host, this.port, this.path, query, this.fragment);
+  }
+
+  public UrlLike mutateFragment(String fragment) {
+    return new UrlLike(this.protocol, this.userInfo, this.host, this.port, this.path, this.query, fragment);
+  }
+
+  
   private static String normalizeProtocol(String s) {
     if (s == null) {
       return null;
@@ -100,6 +140,14 @@ public class UrlLike {
       return BLANK_STRING;
     } else {
       return path.toLowerCase();
+    }
+  }
+
+  public static String maybePrefixSlash(String s) {
+    if (s.startsWith(SLASH)) {
+      return s;
+    } else {
+      return SLASH + s;
     }
   }
 }
