@@ -5,6 +5,7 @@
 package clojurewerkz.urly;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 public class UrlLike {
@@ -124,6 +125,15 @@ public class UrlLike {
 
   public UrlLike mutateFragment(String fragment) {
     return new UrlLike(this.protocol, this.userInfo, this.host, this.port, this.path, this.query, fragment);
+  }
+
+
+  public UrlLike withoutLastPathSegment() {
+    return this.mutatePath(this.path.replaceAll("[^/]+$", ""));
+  }
+
+  public URI toURI() throws URISyntaxException {
+    return new URI(this.protocol, this.userInfo, this.host, this.port, this.path, this.query, this.fragment);
   }
 
   

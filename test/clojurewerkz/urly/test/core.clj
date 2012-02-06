@@ -298,3 +298,17 @@
         expected  (url-like (URL. "https://travis-ci.org/michaelklishin/urly#log"))
         mutated   (.mutateFragment urly "log")]
     (is (equal-part-by-part expected mutated))))
+
+
+(deftest test-without-last-path-segment
+  (is (= (path-of (.withoutLastPathSegment (url-like "http://giove.local/a/b/css")))
+         (path-of (url-like "http://giove.local/a/b/")))))
+
+(deftest test-to-uri
+  (are [original expected] (is (= (.toURI (url-like original)) (URI. expected)))
+       "http://www.giove.local"          "http://www.giove.local"
+       "http://www.giove.local/a/"       "http://www.giove.local/a/"
+       "http://www.giove.local/a/1.html" "http://www.giove.local/a/1.html"
+       "http://www.giove.local/a/1.html?query=string"          "http://www.giove.local/a/1.html?query=string"
+       "http://www.giove.local/a/1.html?query=string#fragment" "http://www.giove.local/a/1.html?query=string#fragment")
+  (is (= (-> (url-like "http://giove.local/a/b/css") .withoutLastPathSegment .toURI) (URI. "http://giove.local/a/b/"))))

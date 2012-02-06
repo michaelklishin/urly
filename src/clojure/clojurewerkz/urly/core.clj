@@ -14,7 +14,15 @@
 
   URL
   (url-like [^URL input]
-    (UrlLike/fromURL input)))
+    (UrlLike/fromURL input))
+
+  String
+  (url-like [^String input]
+    (try
+      (url-like (URI. input))
+      (catch java.net.URISyntaxException e
+        ;; TODO: fallback parsing strategies. MK.
+        ))))
 
 
 
