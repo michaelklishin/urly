@@ -139,6 +139,15 @@ public class UrlLike {
     return new URI(this.protocol, this.userInfo, this.host, this.port, this.path, this.query, this.fragment);
   }
 
+  @Override
+  public String toString() {
+    try {
+      return this.toURI().toString();
+    } catch (URISyntaxException e) {
+      return "<malformed URI>";
+    }
+  }
+
   
   private static String normalizeProtocol(String s) {
     if (s == null) {
