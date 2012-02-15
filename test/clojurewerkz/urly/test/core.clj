@@ -304,6 +304,11 @@
   (is (= (path-of (.withoutLastPathSegment (url-like "http://giove.local/a/b/css")))
          (path-of (url-like "http://giove.local/a/b/")))))
 
+(deftest test-without-query-string-and-fragment
+  (let [urly (.withoutQueryStringAndFragment (url-like "http://giove.local/a/b/css?query=string#fragment"))]
+    (is (nil? (query-of    urly)))
+    (is (nil? (fragment-of urly)))))
+
 (deftest test-to-uri
   (are [original expected] (is (= (.toURI (url-like original)) (URI. expected)))
        "http://www.giove.local"          "http://www.giove.local"

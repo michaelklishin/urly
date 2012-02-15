@@ -127,6 +127,9 @@ public class UrlLike {
     return new UrlLike(this.protocol, this.userInfo, this.host, this.port, this.path, this.query, fragment);
   }
 
+  public UrlLike withoutQueryStringAndFragment() {
+    return this.mutateQuery(null).mutateFragment(null);
+  }
 
   public UrlLike withoutLastPathSegment() {
     return this.mutatePath(this.path.replaceAll("[^/]+$", ""));
