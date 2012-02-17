@@ -4,6 +4,7 @@
 
 package clojurewerkz.urly;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -137,6 +138,10 @@ public class UrlLike {
 
   public URI toURI() throws URISyntaxException {
     return new URI(this.protocol, this.userInfo, this.host, this.port, this.path, this.query, this.fragment);
+  }
+
+  public URL toURL() throws URISyntaxException, MalformedURLException {
+    return this.toURI().toURL();
   }
 
   @Override

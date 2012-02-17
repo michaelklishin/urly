@@ -318,6 +318,15 @@
        "http://www.giove.local/a/1.html?query=string#fragment" "http://www.giove.local/a/1.html?query=string#fragment")
   (is (= (-> (url-like "http://giove.local/a/b/css") .withoutLastPathSegment .toURI) (URI. "http://giove.local/a/b/"))))
 
+(deftest test-to-url
+  (are [original expected] (is (= (.toURL (url-like original)) (URL. expected)))
+       "http://www.giove.local"          "http://www.giove.local"
+       "http://www.giove.local/a/"       "http://www.giove.local/a/"
+       "http://www.giove.local/a/1.html" "http://www.giove.local/a/1.html"
+       "http://www.giove.local/a/1.html?query=string"          "http://www.giove.local/a/1.html?query=string"
+       "http://www.giove.local/a/1.html?query=string#fragment" "http://www.giove.local/a/1.html?query=string#fragment")
+  (is (= (-> (url-like "http://giove.local/a/b/css") .withoutLastPathSegment .toURL) (URL. "http://giove.local/a/b/"))))
+
 (deftest test-to-string
   (are [original expected] (is (= (str (url-like original)) expected))
        "http://www.giove.local"          "http://www.giove.local"
