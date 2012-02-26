@@ -23,7 +23,11 @@
       (url-like (URI. input))
       (catch java.net.URISyntaxException e
         ;; TODO: fallback parsing strategies. MK.
-        ))))
+        )))
+
+  UrlLike
+  (url-like [^UrlLike input]
+    input))
 
 
 
@@ -49,7 +53,7 @@
   (user-info-of [^URI input]
     (.getUserInfo input))
   (path-of [^URI input]
-    (UrlLike/normalizePath (.getPath input)))
+    (UrlLike/pathOrDefault (.getPath input)))
   (query-of [^URI input]
     (.getQuery input))
   (fragment-of [^URI input]
@@ -69,7 +73,7 @@
   (user-info-of [^URL input]
     (.getUserInfo input))
   (path-of [^URL input]
-    (UrlLike/normalizePath (.getPath input)))
+    (UrlLike/pathOrDefault (.getPath input)))
   (query-of [^URL input]
     (.getQuery input))
   (fragment-of [^URL input]
@@ -164,3 +168,11 @@
 
 
 (def relative? (complement absolute?))
+
+
+(defn as-map
+  "Returns a map of components (:protocol, :host, :port, :user-info, :path, :query, :fragment, :tld) for given input"
+  [input]
+  (let [urly (url-like input)]
+    { :protocol (protocol-of urly) :host (host-of urly) :port (port-of urly) :user-info (user-info-of urly)
+     :path (path-of urly) :query (query-of urly) :fragment (fragment-of urly) :tld (tld-of urly) }))

@@ -28,11 +28,11 @@ public class UrlLike {
 
 
   protected UrlLike(String scheme, String userInfo, String host, int port, String path, String query, String fragment) {
-    this.protocol = scheme;
+    this.protocol = lowerCaseOrNull(scheme);
     this.userInfo = userInfo;
-    this.host = host;
+    this.host =  lowerCaseOrNull(host);
     this.port = port;
-    this.path = path;
+    this.path = pathOrDefault(path);
     this.query = query;
     this.fragment = fragment;
   }
@@ -83,8 +83,12 @@ public class UrlLike {
   }
 
   public InternetDomainName getPublicSuffix() {
+    if(this.host == null) {
+      return null;
+    }
+
     InternetDomainName idn = InternetDomainName.from(this.host);
-    if (idn.hasPublicSuffix()) {
+    if ((idn != null) && (idn.hasPublicSuffix())) {
       return idn.publicSuffix();
     } else {
       return null;
@@ -101,11 +105,11 @@ public class UrlLike {
   }
 
   public static UrlLike fromURI(URI uri) {
-    return new UrlLike(normalizeProtocol(uri.getScheme()), uri.getUserInfo(), uri.getHost(), uri.getPort(), normalizePath(uri.getPath()), uri.getQuery(), uri.getFragment());
+    return new UrlLike(lowerCaseOrNull(uri.getScheme()), uri.getUserInfo(), uri.getHost(), uri.getPort(), pathOrDefault(uri.getPath()), uri.getQuery(), uri.getFragment());
   }
 
   public static UrlLike fromURL(URL url) {
-    return new UrlLike(normalizeProtocol(url.getProtocol()), url.getUserInfo(), url.getHost(), url.getPort(), normalizePath(url.getPath()), url.getQuery(), url.getRef());
+    return new UrlLike(lowerCaseOrNull(url.getProtocol()), url.getUserInfo(), url.getHost(), url.getPort(), pathOrDefault(url.getPath()), url.getQuery(), url.getRef());
   }
 
 
@@ -136,7 +140,7 @@ public class UrlLike {
   }
 
   public UrlLike mutatePath(String path) {
-    return new UrlLike(this.protocol, this.userInfo, this.host, this.port, maybePrefixSlash(normalizePath(path)), this.query, this.fragment);
+    return new UrlLike(this.protocol, this.userInfo, this.host, this.port, maybePrefixSlash(pathOrDefault(path)), this.query, this.fragment);
   }
 
   public UrlLike mutateQuery(String query) {
@@ -172,20 +176,23 @@ public class UrlLike {
     }
   }
 
-  
-  private static String normalizeProtocol(String s) {
-    if (s == null) {
+  public static String normalizeProtocol(String host) {
+    return lowerCaseOrNull(host);
+  }
+
+  private static String lowerCaseOrNull(String host) {
+    if (host == null) {
       return null;
     } else {
-      return s.toLowerCase();
+      return host.toLowerCase();
     }
   }
 
-  public static String normalizePath(String path) {
+  public static String pathOrDefault(String path) {
     if ((path == null) || SLASH.equals(path) || BLANK_STRING.equals(path)) {
-      return BLANK_STRING;
+      return SLASH;
     } else {
-      return path.toLowerCase();
+      return path;
     }
   }
 

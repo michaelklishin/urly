@@ -8,11 +8,11 @@
 
 (deftest test-path-normalization
   (doseq [s ["" "/" nil]]
-    (is (= "" (UrlLike/normalizePath s))))
-  (is (= "/login" (UrlLike/normalizePath "/LOGIN"))))
+    (is (= "/" (UrlLike/pathOrDefault s))))
+  (is (= "/LOGIN" (UrlLike/pathOrDefault "/LOGIN"))))
 
 (deftest test-protocol-normalization
-  (is (= "https" (UrlLike/normalizePath "HTTpS"))))
+  (is (= "https" (UrlLike/normalizeProtocol "HTTpS"))))
 
 
 ;;
@@ -44,10 +44,10 @@
   (is (nil?            (user-info-of "https://CLOJURE.org"))))
 
 (deftest test-path-of
-  (is (= ""           (path-of (URI. "http://clojure.org"))))
-  (is (= ""           (path-of (URL. "https://Www.clojure.org/"))))
-  (is (= "/protocols" (path-of "http://clojure.org/Protocols")))
-  (is (= ""           (path-of "https://TWITTER.com/#!/a/path/"))))
+  (is (= "/"          (path-of (URI. "http://clojure.org"))))
+  (is (= "/"          (path-of (URL. "https://Www.clojure.org/"))))
+  (is (= "/Protocols" (path-of "http://clojure.org/Protocols")))
+  (is (= "/"          (path-of "https://TWITTER.com/#!/a/path/"))))
 
 (deftest test-query-of
   (is (nil?              (query-of (URI. "http://clojure.org"))))
@@ -121,11 +121,11 @@
 (deftest test-instantiating-url-like-from-uri
   (let [uri       (URI. "http://blahblah.smackernews.org")
         url-like  (UrlLike/fromURI uri)
-        path      ""
+        path      "/"
         host      "blahblah.smackernews.org"]
     (is (= host      (.getHost uri)))
     (is (= host      (.getHost url-like)))
-    (is (= path      (.getPath uri)))
+    (is (= ""        (.getPath uri)))
     (is (= path      (.getPath url-like)))
     (is (nil? (.getQuery uri)))
     (is (nil? (.getQuery url-like)))
@@ -135,7 +135,7 @@
 (deftest test-instantiating-url-like-from-https-uri
   (let [uri       (URI. "HTTPS://blahblah.smackernews.org")
         url-like  (UrlLike/fromURI uri)
-        path      ""
+        path      "/"
         host      "blahblah.smackernews.org"
         protocol  "https"]
     (is (= "HTTPS"   (.getScheme uri)))
@@ -143,7 +143,7 @@
     (is (= protocol  (.getProtocol url-like)))
     (is (= host      (.getHost uri)))
     (is (= host      (.getHost url-like)))
-    (is (= path      (.getPath uri)))
+    (is (= ""        (.getPath uri)))
     (is (= path      (.getPath url-like)))
     (is (nil? (.getQuery uri)))
     (is (nil? (.getQuery url-like)))
@@ -153,7 +153,7 @@
 (deftest test-instantiating-url-like-from-relative-uri
   (let [uri       (URI. "/LOGIN")
         url-like  (UrlLike/fromURI uri)
-        path      "/login"
+        path      "/LOGIN"
         host      nil
         protocol  nil]
     (is (= protocol  (.getScheme uri)))
@@ -197,9 +197,9 @@
 (deftest test-instantiating-url-like-from-url-that-does-not-end-with-a-slash
   (let [url       (URL. "http://blahblah.smackernews.org")
         url-like  (url-like url)
-        path      ""]
-    (is (= path      (.getPath url)))
-    (is (= path      (.getPath url-like)))
+        path      "/"]
+    (is (= ""     (.getPath url)))
+    (is (= path   (.getPath url-like)))
     (is (nil? (.getQuery url)))
     (is (nil? (.getQuery url-like)))
     (is (= ""  (.getPath url)))
@@ -210,7 +210,7 @@
   (let [url       (URL. "http://blahblah.smackernews.org/")
         urly      (url-like url)]
     (is (= "/"     (.getPath url)))
-    (is (= ""      (.getPath urly)))
+    (is (= "/"     (.getPath urly)))
     (is (nil? (.getQuery url)))
     (is (nil? (.getQuery urly)))
     (is (nil?  (.getRef url)))
@@ -311,7 +311,7 @@
 
 (deftest test-to-uri
   (are [original expected] (is (= (.toURI (url-like original)) (URI. expected)))
-       "http://www.giove.local"          "http://www.giove.local"
+       "http://www.giove.local"          "http://www.giove.local/"
        "http://www.giove.local/a/"       "http://www.giove.local/a/"
        "http://www.giove.local/a/1.html" "http://www.giove.local/a/1.html"
        "http://www.giove.local/a/1.html?query=string"          "http://www.giove.local/a/1.html?query=string"
@@ -320,7 +320,7 @@
 
 (deftest test-to-url
   (are [original expected] (is (= (.toURL (url-like original)) (URL. expected)))
-       "http://www.giove.local"          "http://www.giove.local"
+       "http://www.giove.local"          "http://www.giove.local/"
        "http://www.giove.local/a/"       "http://www.giove.local/a/"
        "http://www.giove.local/a/1.html" "http://www.giove.local/a/1.html"
        "http://www.giove.local/a/1.html?query=string"          "http://www.giove.local/a/1.html?query=string"
@@ -329,7 +329,7 @@
 
 (deftest test-to-string
   (are [original expected] (is (= (str (url-like original)) expected))
-       "http://www.giove.local"          "http://www.giove.local"
+       "http://www.giove.local"          "http://www.giove.local/"
        "http://www.giove.local/a/"       "http://www.giove.local/a/"))
 
 
