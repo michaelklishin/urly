@@ -335,5 +335,12 @@
 
 (deftest test-tld-of
   (are [domain tld] (is (= (tld-of domain) tld))
-       "clojure.org" "org"
-       "juno.co.uk"  "co.uk"))
+       "giove.local"                "local"
+       "giove"                      nil
+       "clojure.org"                "org"
+       "www.clojure.org"            "org"
+       "www7.east.us.megacloud.com" "com"
+       (URI. "http://clojure.org")  "org"
+       (URL. "http://clojure.org")  "org"
+       "juno.co.uk"                 "co.uk"
+       (URI. "http://juno.co.uk")   "co.uk"))
