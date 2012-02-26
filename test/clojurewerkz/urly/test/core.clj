@@ -331,3 +331,9 @@
   (are [original expected] (is (= (str (url-like original)) expected))
        "http://www.giove.local"          "http://www.giove.local"
        "http://www.giove.local/a/"       "http://www.giove.local/a/"))
+
+
+(deftest test-tld-of
+  (are [domain tld] (is (= (tld-of domain) tld))
+       "clojure.org" "org"
+       "juno.co.uk"  "co.uk"))

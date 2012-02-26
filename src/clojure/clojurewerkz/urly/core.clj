@@ -1,7 +1,8 @@
 (ns clojurewerkz.urly.core
   (:refer-clojure :exclude [resolve])
   (:import [clojurewerkz.urly UrlLike]
-           [java.net URI URL]))
+           [java.net URI URL]
+           [com.google.common.net InternetDomainName]))
 
 
 (defprotocol UrlLikeFactory
@@ -33,7 +34,8 @@
   (^String user-info-of [input] "Returns user information of given input")
   (^String path-of      [input] "Returns path of given input")
   (^String query-of     [input] "Returns query string of given input")
-  (^String fragment-of  [input] "Returns fragment of given input"))
+  (^String fragment-of  [input] "Returns fragment of given input")
+  (^String tld-of       [input] "Returns top-level domain (public suffix) name of given input"))
 
 
 (extend-protocol PartsAccessors
@@ -52,6 +54,9 @@
     (.getQuery input))
   (fragment-of [^URI input]
     (.getFragment input))
+  (tld-of [^URI input]
+    (tld-of (UrlLike/fromURI input)))
+  
 
 
   URL
@@ -69,6 +74,8 @@
     (.getQuery input))
   (fragment-of [^URL input]
     (.getRef input))
+  (tld-of [^URL input]
+    (tld-of (UrlLike/fromURL input)))
 
 
   UrlLike
@@ -86,6 +93,8 @@
     (.getQuery input))
   (fragment-of [^UrlLike input]
     (.getFragment input))
+  (tld-of [^UrlLike input]
+    (.getTld input))
 
   String
   ;; TODO: switch to UrlLike once it supports
@@ -103,7 +112,11 @@
   (query-of [^String input]
     (query-of (URI. input)))
   (fragment-of [^String input]
-    (fragment-of (URI. input))))
+    (fragment-of (URI. input)))
+  (tld-of [^String input]
+    (let [idn (InternetDomainName/from input)]
+      (when (.hasPublicSuffix idn)
+        (-> idn .publicSuffix .name)))))
 
 
 ;; protocols dispatch on the 1st argument, here we need to dispatch on

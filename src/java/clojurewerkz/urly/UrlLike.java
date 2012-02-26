@@ -4,6 +4,8 @@
 
 package clojurewerkz.urly;
 
+import com.google.common.net.InternetDomainName;
+
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -80,6 +82,23 @@ public class UrlLike {
     return userInfo;
   }
 
+  public InternetDomainName getPublicSuffix() {
+    InternetDomainName idn = InternetDomainName.from(this.host);
+    if (idn.hasPublicSuffix()) {
+      return idn.publicSuffix();
+    } else {
+      return null;
+    }      
+  }
+
+  public String getTld() {
+    InternetDomainName idn = this.getPublicSuffix();
+    if (idn != null) {
+      return idn.name();
+    } else {
+      return null;
+    }
+  }
 
   public static UrlLike fromURI(URI uri) {
     return new UrlLike(normalizeProtocol(uri.getScheme()), uri.getUserInfo(), uri.getHost(), uri.getPort(), normalizePath(uri.getPath()), uri.getQuery(), uri.getFragment());
