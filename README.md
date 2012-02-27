@@ -19,6 +19,10 @@ Urly tries to make this less painful.
 
 With Leiningen
 
+    [clojurewerkz/urly "1.0.0-beta1"]
+
+or, if you are comfortable with using snapshots,
+
     [clojurewerkz/urly "1.0.0-SNAPSHOT"]
 
 New snapshots are [published to clojars.org](https://clojars.org/clojurewerkz/urly) every day (if there are any changes).
@@ -27,7 +31,8 @@ New snapshots are [published to clojars.org](https://clojars.org/clojurewerkz/ur
 ### clojurewerkz.urly.UrlLike
 
 The central concept in Urly is the UrlLike class. It unifies java.net.URI and java.net.URL as much as practical
-and also supports relative href attributes values like "/search?q=Clojure".
+and also supports relative href attributes values like "/search?q=Clojure". UrlLike instances are immutable and
+perform normalizations that are safe (for example, uses default pathname of "/" and lowercases protocol and hostnames but not pathnames).
 
 TBD
 
@@ -52,6 +57,6 @@ Urly is built from the ground up for Clojure 1.3 and up.
 
 ## License
 
-Copyright (C) 2011 Michael S. Klishin
+Copyright (C) 2011-2012 Michael S. Klishin
 
 Distributed under the Eclipse Public License, the same as Clojure.
