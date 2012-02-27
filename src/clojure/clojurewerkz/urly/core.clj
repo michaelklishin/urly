@@ -60,7 +60,7 @@
     (.getFragment input))
   (tld-of [^URI input]
     (tld-of (UrlLike/fromURI input)))
-  
+
 
 
   URL
@@ -169,10 +169,30 @@
 
 (def relative? (complement absolute?))
 
-
 (defn as-map
   "Returns a map of components (:protocol, :host, :port, :user-info, :path, :query, :fragment, :tld) for given input"
   [input]
   (let [urly (url-like input)]
     { :protocol (protocol-of urly) :host (host-of urly) :port (port-of urly) :user-info (user-info-of urly)
      :path (path-of urly) :query (query-of urly) :fragment (fragment-of urly) :tld (tld-of urly) }))
+
+
+(defprotocol Mutation
+  (without-query-string-and-fragment [input] "Strips off query string and fragment. Returns value of the same type as input."))
+
+(extend-protocol Mutation
+  URI
+  (without-query-string-and-fragment [^URI input]
+    (.toURI (without-query-string-and-fragment (UrlLike/fromURI input))))
+
+  URL
+  (without-query-string-and-fragment [^URL input]
+    (.toURL (without-query-string-and-fragment (UrlLike/fromURL input))))
+
+  String
+  (without-query-string-and-fragment [^String input]
+    (.toString (without-query-string-and-fragment (url-like input))))
+
+  UrlLike
+  (without-query-string-and-fragment [^UrlLike input]
+    (.withoutQueryStringAndFragment input)))
