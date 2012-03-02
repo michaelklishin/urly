@@ -183,15 +183,15 @@
 (extend-protocol Mutation
   URI
   (without-query-string-and-fragment [^URI input]
-    (.toURI (without-query-string-and-fragment (UrlLike/fromURI input))))
+    (.toURI ^UrlLike (without-query-string-and-fragment (UrlLike/fromURI input))))
 
   URL
   (without-query-string-and-fragment [^URL input]
-    (.toURL (without-query-string-and-fragment (UrlLike/fromURL input))))
+    (.toURL ^UrlLike (without-query-string-and-fragment (UrlLike/fromURL input))))
 
   String
   (without-query-string-and-fragment [^String input]
-    (.toString (without-query-string-and-fragment (url-like input))))
+    (.toString ^UrlLike (without-query-string-and-fragment (url-like input))))
 
   UrlLike
   (without-query-string-and-fragment [^UrlLike input]
