@@ -19,7 +19,7 @@ Urly tries to make this less painful.
 
 With Leiningen
 
-    [clojurewerkz/urly "1.0.0-beta1"]
+    [clojurewerkz/urly "1.0.0-beta2"]
 
 or, if you are comfortable with using snapshots,
 
