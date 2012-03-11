@@ -1,3 +1,4 @@
 language: clojure
-script: lein javac, test
-
+lein: lein2
+before_script: lein2 with-profile dev javac
+script: lein2 with-profile dev:1.4 test

@@ -12,6 +12,11 @@ java.net.URL because both will throw illegal format exceptions.
 
 Urly tries to make this less painful.
 
+## Supported Clojure versions
+
+Urly is built from the ground up for Clojure 1.3 and up.
+
+
 
 ## Usage
 
@@ -50,9 +55,17 @@ Urly is a Work In Progress. Please see our test suite for code examples.
 CI is hosted by [travis-ci.org](http://travis-ci.org)
 
 
-## Supported Clojure versions
+## Development
 
-Urly is built from the ground up for Clojure 1.3 and up.
+Urly uses [Leiningen 2](https://github.com/technomancy/leiningen/blob/master/doc/TUTORIAL.md). Make
+sure you have it installed and then run tests against Clojure 1.3.0 and 1.4.0[-beta4] using
+
+    lein2 with-profile dev javac
+    lein2 with-profile dev:1.4 test
+
+Then create a branch and make your changes on it. Once you are done with your changes and all
+tests pass, submit a pull request on Github.
+
 
 
 ## License

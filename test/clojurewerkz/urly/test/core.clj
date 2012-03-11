@@ -5,6 +5,7 @@
   (:import [java.net URI URL]
            [clojurewerkz.urly UrlLike]))
 
+(println (str "Using Clojure version " *clojure-version*))
 
 (deftest test-path-normalization
   (doseq [s ["" "/" nil]]
