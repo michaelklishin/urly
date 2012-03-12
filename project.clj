@@ -8,4 +8,6 @@
              :1.4 { :dependencies [[org.clojure/clojure "1.4.0-beta4"]] }}
   :source-paths ["src/clojure"]
   :java-source-paths ["src/java"]
+  :test-selectors {:default (fn [v] (not (:time-consuming v))),
+                   :focus   (fn [v] (:focus v))}
   :warn-on-reflection true)

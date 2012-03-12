@@ -119,7 +119,27 @@
     (is (= "/iphone"        (.getPath url-like)))
     (is (= (.getPath uri)   (.getFile url-like)))))
 
-(deftest test-instantiating-url-like-from-uri
+(deftest ^{ :focus true } test-instantiating-url-like-from-domain-name
+  (let [uri      "arstechnica.com"
+        url-like (UrlLike/homepageOf uri)
+        host     "arstechnica.com"]
+    (is (= host   (.getHost url-like)))
+    (is (= "http" (.getScheme   url-like)))
+    (is (= "http" (.getProtocol url-like)))
+    (is (= host   (.getHost url-like)))
+    (is (= "/"    (.getPath url-like)))))
+
+(deftest ^{ :focus true } test-instantiating-url-like-from-domain-name-and-protocol
+  (let [uri      "github.com"
+        url-like (UrlLike/homepageOf uri "https")
+        host     "github.com"]
+    (is (= host    (.getHost url-like)))
+    (is (= "https" (.getScheme   url-like)))
+    (is (= "https" (.getProtocol url-like)))
+    (is (= host    (.getHost url-like)))
+    (is (= "/"     (.getPath url-like)))))
+
+(deftest test-instantiating-url-like-from-uri2
   (let [uri       (URI. "http://blahblah.smackernews.org")
         url-like  (UrlLike/fromURI uri)
         path      "/"

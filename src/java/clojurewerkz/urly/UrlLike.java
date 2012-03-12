@@ -112,6 +112,13 @@ public class UrlLike {
     return new UrlLike(lowerCaseOrNull(url.getProtocol()), url.getUserInfo(), url.getHost(), url.getPort(), pathOrDefault(url.getPath()), url.getQuery(), url.getRef());
   }
 
+  public static UrlLike homepageOf(String hostname) {
+    return new UrlLike(lowerCaseOrNull("http"), null, hostname, 80, SLASH, null, null);
+  }
+
+  public static UrlLike homepageOf(String hostname, String schema) {
+    return new UrlLike(lowerCaseOrNull(schema), null, hostname, 80, SLASH, null, null);
+  }
 
 
   public UrlLike mutateHost(String host) {
