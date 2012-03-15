@@ -8,6 +8,7 @@
   :aliases  { "all" ["with-profile" "dev:dev,1.4"] }
   :source-paths ["src/clojure"]
   :java-source-paths ["src/java"]
+  :javac-options      ["-target" "1.6" "-source" "1.6"]
   :test-selectors {:default (fn [v] (not (:time-consuming v))),
                    :focus   (fn [v] (:focus v))}
   :warn-on-reflection true)
