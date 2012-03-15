@@ -24,7 +24,7 @@ Urly is built from the ground up for Clojure 1.3 and up.
 
 With Leiningen
 
-    [clojurewerkz/urly "1.0.0-beta3"]
+    [clojurewerkz/urly "1.0.0-beta4"]
 
 or, if you are comfortable with using snapshots,
 
