@@ -15,6 +15,22 @@
 (deftest test-protocol-normalization
   (is (= "https" (UrlLike/normalizeProtocol "HTTpS"))))
 
+(deftest test-extra-protocol-prefixes
+  (is (= (UrlLike/eliminateDoubleProtocol "http://https://pirmasenser-zeitung.de/content/abonnement/pz_card/index.shtml" "https")
+         "https://pirmasenser-zeitung.de/content/abonnement/pz_card/index.shtml"))
+  (are [i o] (is (= (eliminate-extra-protocol-prefixes i) o))
+       "http://https://pirmasenser-zeitung.de/content/abonnement/pz_card/index.shtml" "https://pirmasenser-zeitung.de/content/abonnement/pz_card/index.shtml"
+       "http://http://https://beyond-broken.com/" "https://beyond-broken.com/"
+       "https://https://https://http://beyond-broken.com/" "http://beyond-broken.com/")
+  (let [input "http://https://pirmasenser-zeitung.de/content/abonnement/pz_card/index.shtml"
+        urly  (url-like input)]
+    (is (= (protocol-of urly) "https"))
+    (is (= (host-of urly) "pirmasenser-zeitung.de")))
+  (let [input "http://https://http://pirmasenser-zeitung.de/content/abonnement/pz_card/index.shtml"
+        urly  (url-like input)]
+    (is (= (protocol-of urly) "http"))
+    (is (= (host-of urly) "pirmasenser-zeitung.de"))))
+
 
 ;;
 ;; Parts accessors
@@ -331,7 +347,8 @@
     (is (nil? (fragment-of urly)))))
 
 (deftest test-without-query-string-and-fragment2
-  (is (= (without-query-string-and-fragment "http://giove.local/a/b/css?query=string#fragment") "http://giove.local/a/b/css")))
+  (is (= (without-query-string-and-fragment "http://giove.local/a/b/css?query=string#fragment") "http://giove.local/a/b/css"))
+  (is (= (without-query-string-and-fragment "http://https://giove.local/a/b/css?query=string#fragment") "https://giove.local/a/b/css")))
 
 (deftest test-without-query-string-and-fragment3
   (is (= (without-query-string-and-fragment (URI. "http://giove.local/a/b/css?query=string#fragment")) (URI. "http://giove.local/a/b/css"))))

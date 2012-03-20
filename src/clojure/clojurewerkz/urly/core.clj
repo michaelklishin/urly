@@ -8,6 +8,7 @@
 (defprotocol UrlLikeFactory
   (^UrlLike url-like [input] "Instantiates a new UrlLike object"))
 
+(declare eliminate-extra-protocol-prefixes)
 (extend-protocol UrlLikeFactory
   URI
   (url-like [^URI input]
@@ -20,7 +21,7 @@
   String
   (url-like [^String input]
     (try
-      (url-like (URI. input))
+      (url-like (URI. (eliminate-extra-protocol-prefixes input)))
       (catch java.net.URISyntaxException e
         ;; TODO: fallback parsing strategies. MK.
         )))
@@ -28,7 +29,6 @@
   UrlLike
   (url-like [^UrlLike input]
     input))
-
 
 
 (defprotocol PartsAccessors
@@ -60,7 +60,6 @@
     (.getFragment input))
   (tld-of [^URI input]
     (tld-of (UrlLike/fromURI input)))
-
 
 
   URL
@@ -196,3 +195,19 @@
   UrlLike
   (without-query-string-and-fragment [^UrlLike input]
     (.withoutQueryStringAndFragment input)))
+
+
+
+;;
+;; Broken real world URLs/URIs
+;;
+
+(def ^:const extra-protocol-regexp #"^(?:https?://)+(https?)://")
+(def ^:const extra-protocol-re-str "^(?:https?://)+(https?)://")
+
+(defn eliminate-extra-protocol-prefixes
+  [^String s]
+  (let [[all proto] (re-find extra-protocol-regexp s)]
+    (if proto
+      (.replaceFirst s extra-protocol-re-str (str proto "://"))
+      s)))

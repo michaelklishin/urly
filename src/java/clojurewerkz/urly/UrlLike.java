@@ -10,6 +10,8 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class UrlLike {
   private String protocol;
@@ -181,6 +183,12 @@ public class UrlLike {
     } catch (URISyntaxException e) {
       return "<malformed URI>";
     }
+  }
+
+  public static String eliminateDoubleProtocol(String uri, String preferredProtocol) {
+    String lc = uri.toLowerCase();
+
+    return lc.replaceFirst("^https?://https?://", preferredProtocol + "://");
   }
 
   public static String normalizeProtocol(String host) {
