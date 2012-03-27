@@ -29,10 +29,17 @@
 
   String
   (url-like [^String input]
-    (let [inputs [(eliminate-extra-protocol-prefixes input)
-                  (eliminate-extra-protocol-prefixes (.replaceAll input " " "%20"))]]
-      (when-let [s (some uri-or-nil inputs)]
-        (url-like s))))
+    ;; first try detecting cases like "google.com", which java.net.URI does parse but not the way
+    ;; you typically want ("google.com" is parsed as path, not hostname). If that fails, 
+    (try
+      (let [idn (InternetDomainName/from input)]
+        (UrlLike/from idn))
+      (catch IllegalArgumentException iae
+        ;; if that fails, try other parsing strategies
+        (let [inputs [(eliminate-extra-protocol-prefixes input)
+                      (eliminate-extra-protocol-prefixes (.replaceAll input " " "%20"))]]
+          (when-let [s (some uri-or-nil inputs)]
+            (url-like s))))))
 
   UrlLike
   (url-like [^UrlLike input]

@@ -7,6 +7,19 @@
 
 (println (str "Using Clojure version " *clojure-version*))
 
+
+(defn equal-part-by-part
+  [^UrlLike a ^UrlLike b]
+  (is (= (host-of a)      (host-of b)))
+  (is (= (protocol-of a)  (protocol-of b)))
+  (is (= (port-of a)      (port-of b)))
+  (is (= (user-info-of a) (user-info-of b)))
+  (is (= (path-of a)      (path-of b)))
+  (is (= (query-of a)     (query-of b)))
+  (is (= (fragment-of a)  (fragment-of b))))
+
+
+
 (deftest test-path-normalization
   (doseq [s ["" "/" nil]]
     (is (= "/" (UrlLike/pathOrDefault s))))
@@ -41,7 +54,7 @@
   (is (= "http"  (protocol-of (URI. "http://clojure.org"))))
   (is (= "https" (protocol-of (URL. "htTPS://Www.clojure.org"))))
   (is (= "http"  (protocol-of "http://clojure.org")))
-  (is (nil? (protocol-of "clojure.org")))
+  (is (= "http"  (protocol-of "clojure.org")))
   (is (nil? (protocol-of "/Protocols")))
   (is (= "https" (protocol-of "HTTPS://CLOJURE.org"))))
 
@@ -153,14 +166,15 @@
     (is (= "/"    (.getPath url-like)))))
 
 (deftest test-instantiating-url-like-from-domain-name-and-protocol
-  (let [uri      "github.com"
-        url-like (UrlLike/homepageOf uri "https")
-        host     "github.com"]
-    (is (= host    (.getHost url-like)))
-    (is (= "https" (.getScheme   url-like)))
-    (is (= "https" (.getProtocol url-like)))
-    (is (= host    (.getHost url-like)))
-    (is (= "/"     (.getPath url-like)))))
+  (let [uri   "github.com"
+        urly  (UrlLike/homepageOf uri "https")
+        host  "github.com"]
+    (is (= host    (.getHost urly)))
+    (is (= "https" (.getScheme   urly)))
+    (is (= "https" (.getProtocol urly)))
+    (is (= host    (.getHost urly)))
+    (is (= "/"     (.getPath urly)))
+    (is (= -1      (.getPort urly)))))
 
 (deftest test-instantiating-url-like-from-uri2
   (let [uri       (URI. "http://blahblah.smackernews.org")
@@ -235,30 +249,44 @@
 
 (deftest test-instantiating-url-like-from-uri-with-query-string-and-fragment
   (let [uri       (URI. "http://blahblah.smackernews.org/articles?id=123#comments")
-        url-like  (url-like uri)
+        urly      (url-like uri)
         query-str "id=123"
         path      "/articles"
         fragment  "comments"]
     (is (= path      (.getPath uri)))
-    (is (= path      (.getPath url-like)))
+    (is (= path      (.getPath urly)))
     (is (= query-str (.getQuery uri)))
-    (is (= query-str (.getQuery url-like)))
+    (is (= query-str (.getQuery urly)))
     (is (= fragment  (.getFragment uri)))
-    (is (= fragment  (.getFragment url-like)))
-    (is (= fragment  (.getRef      url-like)))))
+    (is (= fragment  (.getFragment urly)))
+    (is (= fragment  (.getRef      urly)))))
+
+(deftest test-instantiating-url-like-from-uri-that-only-has-domain-name
+  (are [s] (is (let [urly (url-like s)]
+                 (and (= (host-of urly) s)
+                      (= (port-of urly) -1)
+                      (= (protocol-of urly) "http"))))
+       "google.com"
+       "amazon.co.uk"
+       "mootools.net"
+       "defprotocol.org"
+       "rubyamqp.info")
+  (are [a b] (is (equal-part-by-part (url-like a) (url-like b)))
+       "defprotocol.org" "http://defprotocol.org/"
+       "defprotocol.org" "http://defprotocol.org"))
 
 
 (deftest test-instantiating-url-like-from-url-that-does-not-end-with-a-slash
-  (let [url       (URL. "http://blahblah.smackernews.org")
-        url-like  (url-like url)
-        path      "/"]
-    (is (= ""     (.getPath url)))
-    (is (= path   (.getPath url-like)))
+  (let [url     (URL. "http://blahblah.smackernews.org")
+        urly    (url-like url)
+        path    "/"]
+    (is (= ""   (.getPath url)))
+    (is (= path (.getPath urly)))
     (is (nil? (.getQuery url)))
-    (is (nil? (.getQuery url-like)))
+    (is (nil? (.getQuery urly)))
     (is (= ""  (.getPath url)))
-    (is (nil?  (.getRef url-like)))
-    (is (nil?  (.getFragment url-like)))))
+    (is (nil?  (.getRef urly)))
+    (is (nil?  (.getFragment urly)))))
 
 (deftest test-instantiating-url-like-from-url-that-does-end-with-a-slash
   (let [url       (URL. "http://blahblah.smackernews.org/")
@@ -270,17 +298,6 @@
     (is (nil?  (.getRef url)))
     (is (nil?  (.getRef urly)))
     (is (nil?  (.getFragment urly)))))
-
-
-(defn equal-part-by-part
-  [^UrlLike a ^UrlLike b]
-  (is (= (host-of a)      (host-of b)))
-  (is (= (protocol-of a)  (protocol-of b)))
-  (is (= (port-of a)      (port-of b)))
-  (is (= (user-info-of a) (user-info-of b)))
-  (is (= (path-of a)      (path-of b)))
-  (is (= (query-of a)     (query-of b)))
-  (is (= (fragment-of a)  (fragment-of b))))
 
 (deftest test-mutation-of-hostname
   (let [url       (URL. "http://blahblah.smackernews.org/iphone")

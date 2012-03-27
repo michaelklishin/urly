@@ -14,6 +14,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class UrlLike {
+  public static final String DEFAULT_PROTOCOL = "http";
+  private static final String SLASH = "/";
+  private static final String BLANK_STRING = "";
+
   private String protocol;
   private String userInfo;
   private String authority;
@@ -23,10 +27,7 @@ public class UrlLike {
   private String path;
   private String query;
   private String fragment;
-
-
-  private static final String SLASH = "/";
-  private static final String BLANK_STRING = "";
+  private static final int DEFAULT_PORT = -1;
 
 
   protected UrlLike(String scheme, String userInfo, String host, int port, String path, String query, String fragment) {
@@ -106,6 +107,26 @@ public class UrlLike {
     }
   }
 
+  public static UrlLike from(InternetDomainName idn) {
+    return fromInternetDomainName(idn);
+  }
+
+  public static UrlLike from(URI uri) {
+    return fromURI(uri);
+  }
+
+  public static UrlLike from(URL url) {
+    return fromURL(url);
+  }
+
+  public static UrlLike from(UrlLike urly) {
+    return urly;
+  }
+
+  public static UrlLike fromInternetDomainName(InternetDomainName idn) {
+    return new UrlLike(DEFAULT_PROTOCOL, null, idn.name(), DEFAULT_PORT, SLASH, null, null);
+  }
+
   public static UrlLike fromURI(URI uri) {
     return new UrlLike(lowerCaseOrNull(uri.getScheme()), uri.getUserInfo(), uri.getHost(), uri.getPort(), pathOrDefault(uri.getPath()), uri.getQuery(), uri.getFragment());
   }
@@ -115,11 +136,11 @@ public class UrlLike {
   }
 
   public static UrlLike homepageOf(String hostname) {
-    return new UrlLike(lowerCaseOrNull("http"), null, hostname, 80, SLASH, null, null);
+    return new UrlLike(DEFAULT_PROTOCOL, null, hostname, DEFAULT_PORT, SLASH, null, null);
   }
 
   public static UrlLike homepageOf(String hostname, String schema) {
-    return new UrlLike(lowerCaseOrNull(schema), null, hostname, 80, SLASH, null, null);
+    return new UrlLike(lowerCaseOrNull(schema), null, hostname, DEFAULT_PORT, SLASH, null, null);
   }
 
 

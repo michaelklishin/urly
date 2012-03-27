@@ -1,3 +1,24 @@
+## Changes between Urly 1.0.0-beta8 and 1.0.0-beta9
+
+### UrlLike/homepageOf now uses the same default port value as java.net.URI
+
+UrlLike/homepageOf used to use default port value of 80. Starting with 1.0.0-beta9, it uses the same
+default prot as java.net.URI (-1).
+
+
+### url-like now treats inputs that are valid Internet domain names specially
+
+`urly.core/url-like` now recognizes cases like "google.com" or "amazon.co.uk" (Internet domain names) and
+uses the input to assign UrlLike instance **host** (java.net.URI assigns **path**), which is what you typically
+want.
+
+In cases where you want classic behavior, use `UrlLike/from` with a URI instance:
+
+``` clojure
+(UrlLike/from (java.net.URI. "amazon.de"))
+```
+
+
 ## Changes between Urly 1.0.0-beta7 and 1.0.0-beta8
 
 `urly.core/url-like` how handles cases when URL parts (typically query string) have unescaped spaces in them
