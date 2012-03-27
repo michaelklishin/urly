@@ -41,6 +41,8 @@
   (is (= "http"  (protocol-of (URI. "http://clojure.org"))))
   (is (= "https" (protocol-of (URL. "htTPS://Www.clojure.org"))))
   (is (= "http"  (protocol-of "http://clojure.org")))
+  (is (nil? (protocol-of "clojure.org")))
+  (is (nil? (protocol-of "/Protocols")))
   (is (= "https" (protocol-of "HTTPS://CLOJURE.org"))))
 
 (deftest test-host-of
@@ -140,7 +142,7 @@
     (is (= "/iphone"        (.getPath url-like)))
     (is (= (.getPath uri)   (.getFile url-like)))))
 
-(deftest ^{ :focus true } test-instantiating-url-like-from-domain-name
+(deftest test-instantiating-url-like-from-domain-name
   (let [uri      "arstechnica.com"
         url-like (UrlLike/homepageOf uri)
         host     "arstechnica.com"]
@@ -150,7 +152,7 @@
     (is (= host   (.getHost url-like)))
     (is (= "/"    (.getPath url-like)))))
 
-(deftest ^{ :focus true } test-instantiating-url-like-from-domain-name-and-protocol
+(deftest test-instantiating-url-like-from-domain-name-and-protocol
   (let [uri      "github.com"
         url-like (UrlLike/homepageOf uri "https")
         host     "github.com"]

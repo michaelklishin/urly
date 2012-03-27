@@ -47,7 +47,8 @@
 (extend-protocol PartsAccessors
   URI
   (protocol-of [^URI input]
-    (-> input .getScheme .toLowerCase))
+    (when-let [s (.getScheme input)]
+      (.toLowerCase s)))
   (host-of [^URI input]
     (-> input .getHost .toLowerCase))
   (port-of [^URI input]
@@ -66,9 +67,9 @@
 
   URL
   (protocol-of [^URL input]
-    (-> input .getProtocol .toLowerCase))
+    (protocol-of (.toURI input)))
   (host-of [^URL input]
-    (-> input .getHost .toLowerCase))
+    (host-of (.toURI input)))
   (port-of [^URL input]
     (.getPort input))
   (user-info-of [^URL input]

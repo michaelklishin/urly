@@ -1,3 +1,8 @@
+## Changes between Urly 1.0.0-beta6 and 1.0.0-beta7
+
+`urly.core/protocol-of` how correctly returns nil for inputs that have no protocol
+
+
 ## Changes between Urly 1.0.0-beta5 and 1.0.0-beta6
 
 `urly.core/absolute?` and `urly.core/relative?` now work for `urly.UrlLike` instances
