@@ -24,7 +24,7 @@ Urly is built from the ground up for Clojure 1.3 and up.
 
 With Leiningen
 
-    [clojurewerkz/urly "1.0.0-beta5"]
+    [clojurewerkz/urly "1.0.0-beta6"]
 
 or, if you are comfortable with using snapshots,
 
@@ -58,7 +58,7 @@ CI is hosted by [travis-ci.org](http://travis-ci.org)
 ## Development
 
 Urly uses [Leiningen 2](https://github.com/technomancy/leiningen/blob/master/doc/TUTORIAL.md). Make
-sure you have it installed and then run tests against Clojure 1.3.0 and 1.4.0[-beta4] using
+sure you have it installed and then run tests against Clojure 1.3.0 and 1.4.0[-beta5] using
 
     lein2 with-profile dev javac
     lein2 all test
