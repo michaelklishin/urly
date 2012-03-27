@@ -10,8 +10,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class UrlLike {
   public static final String DEFAULT_PROTOCOL = "http";
