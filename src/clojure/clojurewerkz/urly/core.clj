@@ -1,5 +1,6 @@
 (ns clojurewerkz.urly.core
   (:refer-clojure :exclude [resolve])
+  (:require [clojure.stacktrace :as strace])
   (:import [clojurewerkz.urly UrlLike]
            [java.net URI URL]
            [com.google.common.net InternetDomainName]))
@@ -24,6 +25,7 @@
       (url-like (URI. (eliminate-extra-protocol-prefixes input)))
       (catch java.net.URISyntaxException e
         ;; TODO: fallback parsing strategies. MK.
+        (strace/print-stack-trace e)
         )))
 
   UrlLike
@@ -156,6 +158,10 @@
   URI
   (absolute? [^URI input]
     (.isAbsolute input))
+
+  UrlLike
+  (absolute? [^UrlLike input]
+    (absolute? (.toURI input)))
 
   URL
   (absolute? [^URL input]

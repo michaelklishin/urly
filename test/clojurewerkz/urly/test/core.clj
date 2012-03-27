@@ -111,11 +111,15 @@
        (URI. "http://clojure.org/Protocols")
        (URL. "http://clojure.org")
        (URL. "http://clojure.org/Protocols")
+       (url-like "http://clojure.org/Protocols")
        "http://clojure.org"
        "http://clojure.org/Protocols")
   (are [input] (is (relative? input))
        (URI. "//clojure.org")
        (URI. "/Protocols")
+       (url-like "clojure.org/Protocols")
+       (url-like "//clojure.org/Protocols")
+       (url-like "/Protocols")
        "//clojure.org"
        "/Protocols"))
 
