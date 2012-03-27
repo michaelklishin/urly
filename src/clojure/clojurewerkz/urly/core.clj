@@ -6,6 +6,14 @@
            [com.google.common.net InternetDomainName]))
 
 
+(defn- uri-or-nil
+  "Returns a java.net.URI instance or nil if URI failed to parse"
+  [^String s]
+  (try
+    (URI. s)
+    (catch java.net.URISyntaxException e
+      nil)))
+
 (defprotocol UrlLikeFactory
   (^UrlLike url-like [input] "Instantiates a new UrlLike object"))
 
@@ -21,12 +29,10 @@
 
   String
   (url-like [^String input]
-    (try
-      (url-like (URI. (eliminate-extra-protocol-prefixes input)))
-      (catch java.net.URISyntaxException e
-        ;; TODO: fallback parsing strategies. MK.
-        (strace/print-stack-trace e)
-        )))
+    (let [inputs [(eliminate-extra-protocol-prefixes input)
+                  (eliminate-extra-protocol-prefixes (.replaceAll input " " "%20"))]]
+      (when-let [s (some uri-or-nil inputs)]
+        (url-like s))))
 
   UrlLike
   (url-like [^UrlLike input]
@@ -106,19 +112,19 @@
   ;; TODO: switch to UrlLike once it supports
   ;;       strings + most of edge cases
   (protocol-of [^String input]
-    (protocol-of (URI. input)))
+    (protocol-of (url-like input)))
   (host-of [^String input]
-    (host-of (URI. input)))
+    (host-of (url-like input)))
   (port-of [^String input]
-    (port-of (URI. input)))
+    (port-of (url-like input)))
   (user-info-of [^String input]
-    (user-info-of (URI. input)))
+    (user-info-of (url-like input)))
   (path-of [^String input]
-    (path-of (URI. input)))
+    (path-of (url-like input)))
   (query-of [^String input]
-    (query-of (URI. input)))
+    (query-of (url-like input)))
   (fragment-of [^String input]
-    (fragment-of (URI. input)))
+    (fragment-of (url-like input)))
   (tld-of [^String input]
     (let [idn (InternetDomainName/from input)]
       (when (.hasPublicSuffix idn)

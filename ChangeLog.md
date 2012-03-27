@@ -1,3 +1,8 @@
+## Changes between Urly 1.0.0-beta7 and 1.0.0-beta8
+
+`urly.core/url-like` how handles cases when URL parts (typically query string) have unescaped spaces in them
+
+
 ## Changes between Urly 1.0.0-beta6 and 1.0.0-beta7
 
 `urly.core/protocol-of` how correctly returns nil for inputs that have no protocol

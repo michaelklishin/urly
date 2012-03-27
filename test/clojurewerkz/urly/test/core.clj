@@ -215,13 +215,23 @@
 
 (deftest test-instantiating-url-like-from-uri-with-query-string
   (let [uri       (URI. "http://clojuredocs.org/search?x=0&y=0&q=split")
-        url-like  (url-like uri)
+        urly      (url-like uri)
         query-str "x=0&y=0&q=split"
         path      "/search"]
     (is (= path      (.getPath uri)))
-    (is (= path      (.getPath url-like)))
+    (is (= path      (.getPath urly)))
     (is (= query-str (.getQuery uri)))
-    (is (= query-str (.getQuery url-like)))))
+    (is (= query-str (.getQuery urly)))))
+
+
+(deftest test-instantiating-url-like-from-uri-with-unescaped-query-string
+  (let [s    "http://brokensite.com/index.php?cl=search&searchparam=arthritis besteck"
+        uri  (URI. "http://brokensite.com/index.php?cl=search&searchparam=arthritis%20besteck")
+        urly (url-like s)
+        query-str "cl=search&searchparam=arthritis besteck"
+        path      "/index.php"]
+    (is (= query-str (query-of urly)))
+    (is (= (host-of s) (host-of urly) (host-of uri)))))
 
 (deftest test-instantiating-url-like-from-uri-with-query-string-and-fragment
   (let [uri       (URI. "http://blahblah.smackernews.org/articles?id=123#comments")
