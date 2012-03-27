@@ -21,7 +21,8 @@
   (are [i o] (is (= (eliminate-extra-protocol-prefixes i) o))
        "http://https://pirmasenser-zeitung.de/content/abonnement/pz_card/index.shtml" "https://pirmasenser-zeitung.de/content/abonnement/pz_card/index.shtml"
        "http://http://https://beyond-broken.com/" "https://beyond-broken.com/"
-       "https://https://https://http://beyond-broken.com/" "http://beyond-broken.com/")
+       "https://https://https://http://beyond-broken.com/" "http://beyond-broken.com/"
+       "http://https://iq-shop.de/customer/account/?___sid=s" "https://iq-shop.de/customer/account/?___sid=s")
   (let [input "http://https://pirmasenser-zeitung.de/content/abonnement/pz_card/index.shtml"
         urly  (url-like input)]
     (is (= (protocol-of urly) "https"))
