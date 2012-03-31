@@ -1,3 +1,9 @@
+## Changes between Urly 1.0.0-beta9 and 1.0.0-rc1
+
+`clojurewerkz.urly.core/url-like` now uses fully-qualified class name for its return type hint.
+This is a usability improvement: this way namespaces that use it won't have to import it.
+
+
 ## Changes between Urly 1.0.0-beta8 and 1.0.0-beta9
 
 ### UrlLike/homepageOf now uses the same default port value as java.net.URI
