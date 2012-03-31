@@ -14,7 +14,7 @@ Urly tries to make this less painful.
 
 ## Supported Clojure versions
 
-Urly is built from the ground up for Clojure 1.3 and up.
+Urly is built from the ground up for Clojure 1.3+ and JDK 6+.
 
 
 
@@ -123,9 +123,10 @@ as their first argument.
 ```
 
 
-## Urly is a Work In Progress
+## Documentation & Examples
 
-Documentation site for Urly is coming in the future. Please see our test suite for code examples.
+Documentation site for Urly is coming in the future (sorry!). Please see our extensive test suite for more code examples.
+
 
 
 ## Continuous Integration
