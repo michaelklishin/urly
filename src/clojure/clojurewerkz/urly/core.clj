@@ -222,8 +222,8 @@
 ;; Broken real world URLs/URIs
 ;;
 
-(def ^:const extra-protocol-regexp #"^(?:https?://)+(https?)://")
-(def ^:const extra-protocol-re-str "^(?:https?://)+(https?)://")
+(def ^:const extra-protocol-regexp #"^(?i:https?://)+(https?)://")
+(def ^:const extra-protocol-re-str "^(?i:https?://)+(https?)://")
 
 (defn eliminate-extra-protocol-prefixes
   [^String s]

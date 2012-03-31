@@ -190,6 +190,7 @@
     (is (nil?  (.getRef url-like)))
     (is (nil?  (.getFragment url-like)))))
 
+
 (deftest test-instantiating-url-like-from-https-uri
   (let [uri       (URI. "HTTPS://blahblah.smackernews.org")
         url-like  (UrlLike/fromURI uri)
@@ -296,6 +297,16 @@
     (is (nil? (.getQuery url)))
     (is (nil? (.getQuery urly)))
     (is (nil?  (.getRef url)))
+    (is (nil?  (.getRef urly)))
+    (is (nil?  (.getFragment urly)))))
+
+(deftest test-instantiating-url-like-from-a-string-url-that-has-extra-protocol-prefixes
+  (let [url       "HTTPS://http://blahblah.smackernews.org/"
+        urly      (url-like url)]
+    (is (= "/"     (.getPath urly)))
+    (is (= "blahblah.smackernews.org" (.getHost urly)))
+    (is (= "http" (.getScheme urly)))
+    (is (nil? (.getQuery urly)))
     (is (nil?  (.getRef urly)))
     (is (nil?  (.getFragment urly)))))
 
