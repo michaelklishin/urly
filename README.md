@@ -24,7 +24,7 @@ Urly is built from the ground up for Clojure 1.3+ and JDK 6+.
 
 With Leiningen
 
-    [clojurewerkz/urly "1.0.0-rc1"]
+    [clojurewerkz/urly "1.0.0-rc2"]
 
 or, if you are comfortable with using snapshots,
 

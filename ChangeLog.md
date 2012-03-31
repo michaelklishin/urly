@@ -1,3 +1,9 @@
+## Changes between Urly 1.0.0-rc1 and 1.0.0-rc2
+
+Extra protocol elimination (for example `http://https://github.com` => `https://github.com`) is now
+case-insensitive (will recognize `http` as well as `HTTp`).
+
+
 ## Changes between Urly 1.0.0-beta9 and 1.0.0-rc1
 
 `clojurewerkz.urly.core/url-like` now uses fully-qualified class name for its return type hint.
