@@ -15,7 +15,7 @@
       nil)))
 
 (defprotocol UrlLikeFactory
-  (^UrlLike url-like [input] "Instantiates a new UrlLike object"))
+  (^clojurewerkz.urly.UrlLike url-like [input] "Instantiates a new UrlLike object"))
 
 (declare eliminate-extra-protocol-prefixes)
 (extend-protocol UrlLikeFactory
