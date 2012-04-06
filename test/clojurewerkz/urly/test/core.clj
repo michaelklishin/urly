@@ -354,6 +354,16 @@
             :fragment nil
             :tld nil} (as-map (url-like url))))))
 
+(deftest test-instantiating-url-like-from-a-string-path-that-has-incorrect-relative-path
+  (let [url "http://fotobuch.fotoquelle.de/../fotobuch"]
+    (is (= {:protocol "http"
+            :host "fotobuch.fotoquelle.de"
+            :port -1
+            :user-info nil
+            :path "/../fotobuch"
+            :query nil
+            :fragment nil
+            :tld "de"} (as-map (url-like url))))))
 
 (deftest test-mutation-of-hostname
   (let [url       (URL. "http://blahblah.smackernews.org/iphone")
