@@ -365,6 +365,17 @@
             :fragment nil
             :tld "de"} (as-map (url-like url))))))
 
+(deftest test-instantiating-url-like-from-a-string-path-that-has-seemingly-incorrect-file-name-in-the-path
+  (let [url "http://londonreisen.net/london-lexikon/.html"]
+    (is (= {:protocol "http"
+            :host "londonreisen.net"
+            :port -1
+            :user-info nil
+            :path "/london-lexikon/.html"
+            :query nil
+            :fragment nil
+            :tld "net"} (as-map (url-like url))))))
+
 (deftest test-mutation-of-hostname
   (let [url       (URL. "http://blahblah.smackernews.org/iphone")
         urly      (url-like url)
