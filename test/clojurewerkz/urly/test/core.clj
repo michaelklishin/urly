@@ -321,6 +321,40 @@
             :fragment nil
             :tld "com"} (as-map (url-like url))))))
 
+(deftest test-instantiating-url-like-from-a-string-url-that-has-dashes-in-path
+  (let [url "http://crappycms.com/arbeit---soziales/1473632,1473632.html"]
+    (is (= {:protocol "http"
+            :host "crappycms.com"
+            :port -1
+            :user-info nil
+            :path "/arbeit---soziales/1473632,1473632.html"
+            :query nil
+            :fragment nil
+            :tld "com"} (as-map (url-like url))))))
+
+(deftest test-instantiating-url-like-from-a-string-url-that-has-dashes-in-hostname
+  (let [url "http://crappy----cms.com/arbeit---soziales/1473632,1473632.html"]
+    (is (= {:protocol "http"
+            :host "crappy----cms.com"
+            :port -1
+            :user-info nil
+            :path "/arbeit---soziales/1473632,1473632.html"
+            :query nil
+            :fragment nil
+            :tld "com"} (as-map (url-like url))))))
+
+(deftest test-instantiating-url-like-from-a-string-path-that-has-dots-and-query-params
+  (let [url "Themen.433.0.html?PHPSESSID=d3a8030eb1c924fa58fbe1a56d805cf3"]
+    (is (= {:protocol nil
+            :host nil
+            :port -1
+            :user-info nil
+            :path "Themen.433.0.html"
+            :query "PHPSESSID=d3a8030eb1c924fa58fbe1a56d805cf3"
+            :fragment nil
+            :tld nil} (as-map (url-like url))))))
+
+
 (deftest test-mutation-of-hostname
   (let [url       (URL. "http://blahblah.smackernews.org/iphone")
         urly      (url-like url)

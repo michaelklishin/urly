@@ -4,7 +4,8 @@
   :license {:name "Eclipse Public License"}
   :dependencies [[org.clojure/clojure "1.3.0"]
                  [com.google.guava/guava "11.0.1"]]
-  :profiles {:1.4 { :dependencies [[org.clojure/clojure "1.4.0-beta6"]] }}
+  :profiles {:dev {:resource-paths ["test/resources"]}
+             :1.4 { :dependencies [[org.clojure/clojure "1.4.0-beta6"]] }}
   :aliases  { "all" ["with-profile" "dev:dev,1.4"] }
   :source-paths ["src/clojure"]
   :java-source-paths ["src/java"]
