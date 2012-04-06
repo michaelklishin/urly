@@ -310,6 +310,17 @@
     (is (nil?  (.getRef urly)))
     (is (nil?  (.getFragment urly)))))
 
+(deftest test-instantiating-url-like-from-a-string-url-that-has-commas-in-path
+  (let [url "http://brokenbeyondrepair.com/1472778,1472778,view,asFeed.xml"]
+    (is (= {:protocol "http"
+            :host "brokenbeyondrepair.com"
+            :port -1
+            :user-info nil
+            :path "/1472778,1472778,view,asFeed.xml"
+            :query nil
+            :fragment nil
+            :tld "com"} (as-map (url-like url))))))
+
 (deftest test-mutation-of-hostname
   (let [url       (URL. "http://blahblah.smackernews.org/iphone")
         urly      (url-like url)
