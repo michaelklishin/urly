@@ -110,9 +110,17 @@ as their first argument.
   (.mutatePath u "/Protocols")
   ;; returns a UrlLike instance that represents "https://clojure.org/"
   (.mutateProtocol u "https")
-    ;; returns a UrlLike instance that represents "http://clojure.org/"
+  ;; returns a UrlLike instance with query string URL-encoded using UTF-8 as encoding
+  (encode-query (url-like "http://clojuredocs.org/search?x=0&y=0&q=%22predicate function%22~10"))
+  ;; returns a UrlLike instance that represents "http://clojure.org/"
   (-> u (.mutateQuery "search=protocols")
         (.withoutQueryStringAndFragment))
+  ;; the same via Clojure API
+  (-> u (mutate-query "search=protocols")
+        (.withoutQueryStringAndFragment))
+  ;; returns a UrlLike instance that represents "http://clojuredocs.org/search?x=0&y=0&q=%22predicate+function%22~10"
+  (-> u (mutate-query "x=0&y=0&q=%22PREDICATE+FUNCTION%22~10")
+        (mutate-query-with (fn [^String s] (.toLowerCase s)))))
 
 
 

@@ -2,7 +2,7 @@
   (:refer-clojure :exclude [resolve])
   (:require [clojure.stacktrace :as strace])
   (:import [clojurewerkz.urly UrlLike]
-           [java.net URI URL]
+           [java.net URI URL URLEncoder]
            [com.google.common.net InternetDomainName]))
 
 
@@ -17,7 +17,7 @@
 (defprotocol UrlLikeFactory
   (^clojurewerkz.urly.UrlLike url-like [input] "Instantiates a new UrlLike object"))
 
-(declare eliminate-extra-protocol-prefixes)
+(declare eliminate-extra-protocol-prefixes mutate-query mutate-query-with)
 (extend-protocol UrlLikeFactory
   URI
   (url-like [^URI input]
@@ -30,7 +30,7 @@
   String
   (url-like [^String input]
     ;; first try detecting cases like "google.com", which java.net.URI does parse but not the way
-    ;; you typically want ("google.com" is parsed as path, not hostname). If that fails, 
+    ;; you typically want ("google.com" is parsed as path, not hostname). If that fails,
     (try
       (let [idn (InternetDomainName/from input)]
         (UrlLike/from idn))
@@ -116,8 +116,6 @@
     (.getTld input))
 
   String
-  ;; TODO: switch to UrlLike once it supports
-  ;;       strings + most of edge cases
   (protocol-of [^String input]
     (protocol-of (url-like input)))
   (host-of [^String input]
@@ -197,24 +195,60 @@
 
 
 (defprotocol Mutation
-  (without-query-string-and-fragment [input] "Strips off query string and fragment. Returns value of the same type as input."))
+  (without-query-string-and-fragment [input] "Strips off query string and fragment. Returns value of the same type as input.")
+  (mutate-query [input s] "Mutates query with given value")
+  (mutate-query-with [input f] "Mutates query with given function")
+  (encode-query [input] "URL encodes query if a given input has one")
+  (mutate-fragment [input s] "Mutates fragment with given value"))
 
 (extend-protocol Mutation
   URI
-  (without-query-string-and-fragment [^URI input]
+  (^java.net.URI without-query-string-and-fragment [^URI input]
     (.toURI ^UrlLike (without-query-string-and-fragment (UrlLike/fromURI input))))
+  (^java.net.URI mutate-query [^URI input s]
+    (.toURI ^UrlLike (mutate-query (url-like input) s)))
+  (^java.net.URI mutate-query-with [^URI input f]
+    (.toURI ^UrlLike (mutate-query-with (url-like input) f)))
+  (^java.net.URI encode-query [^URI input]
+    (.toURI ^UrlLike (encode-query (url-like input))))
+  (^java.net.URI mutate-fragment [^URI input s]
+    (.toURI ^UrlLike (mutate-fragment (url-like input) s)))
 
   URL
-  (without-query-string-and-fragment [^URL input]
+  (^java.net.URL without-query-string-and-fragment [^URL input]
     (.toURL ^UrlLike (without-query-string-and-fragment (UrlLike/fromURL input))))
+  (^java.net.URL mutate-query [^URL input s]
+    (.toURL ^UrlLike (mutate-query (url-like input) s)))
+  (^java.net.URL mutate-query-with [^URL input f]
+    (.toURI ^UrlLike (mutate-query-with (url-like input) f)))
+  (^java.net.URL encode-query [^URL input]
+    (.toURI ^UrlLike (encode-query (url-like input))))
+  (^java.net.URL mutate-fragment [^URL input s]
+    (.toURL ^UrlLike (mutate-fragment (url-like input) s)))
 
   String
-  (without-query-string-and-fragment [^String input]
+  (^String without-query-string-and-fragment [^String input]
     (.toString ^UrlLike (without-query-string-and-fragment (url-like input))))
+  (^String mutate-query [^String input s]
+    (.toString ^UrlLike (mutate-query (url-like input) s)))
+  (^String mutate-query-with [^String input f]
+    (.toString ^UrlLike (mutate-query (url-like input) f)))
+  (^String encode-query [^String input]
+    (.toString ^UrlLike (encode-query (url-like input))))
+  (^String mutate-fragment [^String input s]
+    (.toString ^UrlLike (mutate-fragment (url-like input) s)))
 
   UrlLike
-  (without-query-string-and-fragment [^UrlLike input]
-    (.withoutQueryStringAndFragment input)))
+  (^UrlLike without-query-string-and-fragment [^UrlLike input]
+    (.withoutQueryStringAndFragment input))
+  (^UrlLike mutate-query [^UrlLike input s]
+    (.mutateQuery input s))
+  (^UrlLike mutate-query-with [^UrlLike input f]
+    (.mutateQuery input (f (query-of input))))
+  (^UrlLike encode-query [^UrlLike input]
+    (.encodeQuery input))
+  (^UrlLike mutate-fragment [^UrlLike input s]
+    (.mutateFragment input s)))
 
 
 

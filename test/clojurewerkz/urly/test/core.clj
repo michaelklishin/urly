@@ -139,7 +139,30 @@
        "/Protocols"))
 
 ;;
-;; UrlLike
+;; UrlLike#hasQuery, #hasFragment, etc
+;;
+
+(deftest ^:focus test-url-like-has-query
+  (testing "UrlLike with query string"
+    (is (.hasQuery (url-like "http://clojuredocs.org/search?x=0&y=0&q=%22predicate+function%22~10"))))
+  (testing "UrlLike without query string"
+    (is (not (.hasQuery (url-like "http://clojuredocs.org"))))))
+
+(deftest ^:focus test-url-like-has-fragment
+  (testing "UrlLike with fragment"
+    (is (.hasFragment (url-like "http://developers.whatwg.org/webappapis.html#introduction-6"))))
+  (testing "UrlLike without fragment"
+    (is (not (.hasFragment (url-like "http://clojuredocs.org"))))))
+
+(deftest ^:focus test-url-like-has-non-default-port
+  (testing "UrlLike with non-default port"
+    (is (.hasNonDefaultPort (url-like "http://clojuredocs.org:8080"))))
+  (testing "UrlLike with default port"
+    (is (not (.hasNonDefaultPort (url-like "http://clojuredocs.org"))))))
+
+
+;;
+;; UrlLike instantiation
 ;;
 
 (deftest test-instantiating-url-like-from-uri1
@@ -376,6 +399,10 @@
             :fragment nil
             :tld "net"} (as-map (url-like url))))))
 
+;;
+;; UrlLike#mutateHostname
+;;
+
 (deftest test-mutation-of-hostname
   (let [url       (URL. "http://blahblah.smackernews.org/iphone")
         urly      (url-like url)
@@ -384,6 +411,9 @@
     (is (equal-part-by-part expected mutated))
     (is (= (host-of expected)      (host-of (.mutateHostname urly "apple.com"))))))
 
+;;
+;; UrlLike#mutateProtocol
+;;
 
 (deftest test-mutation-of-protocol
   (let [url       (URL. "http://github.com/michaelklishin/urly")
@@ -392,6 +422,10 @@
         mutated   (.mutateProtocol urly "hTTps")]
     (is (equal-part-by-part expected mutated))))
 
+
+;;
+;; UrlLike#mutatePort
+;;
 
 (deftest test-mutation-of-port-as-int
   (let [url       (URL. "https://github.com:434/michaelklishin/urly")
@@ -408,6 +442,9 @@
         mutated   (.mutatePort urly "443")]
     (is (equal-part-by-part expected mutated))))
 
+;;
+;; UrlLike#mutateUserInfo
+;;
 
 (deftest test-mutation-of-user-info-of
   (let [url       (URL. "https://megacorp.internal")
@@ -416,6 +453,10 @@
         ;; username is not lowercased because passwords are case-sensitive.
         mutated   (.mutateUserInfo urly "guest:GUEST")]
     (is (equal-part-by-part expected mutated))))
+
+;;
+;; UrlLike#mutatePath
+;;
 
 (deftest test-mutation-of-path-without-slash
   (let [url       (URL. "https://github.com/michaelklishin/urly")
@@ -432,19 +473,89 @@
     (is (equal-part-by-part expected mutated))))
 
 
-(deftest test-mutation-of-query-string
+;;
+;; UrlLike#mutateQuery, mutate-query, encode-query
+;;
+
+(deftest test-mutation-of-query-string-on-url-like-instance-via-java-interop
   (let [url       (URL. "https://secure.travis-ci.org/michaelklishin/urly.png?branch=master")
         urly      (url-like url)
         expected  (url-like (URL. "https://secure.travis-ci.org/michaelklishin/urly.png?branch=next"))
         mutated   (.mutateQuery urly "branch=next")]
     (is (equal-part-by-part expected mutated))))
 
+(deftest ^:focus test-mutation-of-query-string-on-url-like-instance-via-clojure-protocol
+  (let [url       "https://secure.travis-ci.org/michaelklishin/urly.png?branch=master"
+        urly      (url-like url)
+        expected  (url-like "https://secure.travis-ci.org/michaelklishin/urly.png?branch=next")
+        mutated   (mutate-query urly "branch=next")]
+    (is (equal-part-by-part expected mutated))))
 
-(deftest test-mutation-of-fragment
+(deftest ^:focus test-mutation-of-query-string-on-uri-instance-via-clojure-protocol
+  (let [uri       (URI. "https://secure.travis-ci.org/michaelklishin/urly.png?branch=master")
+        expected  (URI. "https://secure.travis-ci.org/michaelklishin/urly.png?branch=next")
+        mutated   (mutate-query uri "branch=next")]
+    (is (equal-part-by-part expected mutated))))
+
+(deftest ^:focus test-mutation-of-query-string-on-url-instance-via-clojure-protocol
+  (let [url       (URL. "https://secure.travis-ci.org/michaelklishin/urly.png?branch=master")
+        expected  (URL. "https://secure.travis-ci.org/michaelklishin/urly.png?branch=next")
+        mutated   (mutate-query url "branch=next")]
+    (is (equal-part-by-part expected mutated))))
+
+(deftest ^:focus test-mutation-of-query-string-on-string-via-clojure-protocol
+  (let [url       "https://secure.travis-ci.org/michaelklishin/urly.png?branch=master"
+        expected  "https://secure.travis-ci.org/michaelklishin/urly.png?branch=next"
+        mutated   (mutate-query url "branch=next")]
+    (is (equal-part-by-part expected mutated))))
+
+(deftest ^:focus test-encoding-of-query-string-on-url-like-via-java-interop
+  (let [url       (url-like (URL. "http://seniorenland.com/index.php?cl=search&searchparam=sprechende armbanduhr herren"))
+        expected  (URL. "http://seniorenland.com/index.php?cl%3Dsearch%26searchparam%3Dsprechende+armbanduhr+herren")
+        mutated   (.encodeQuery url)]
+    (is (equal-part-by-part expected mutated))))
+
+(deftest ^:focus test-encoding-of-query-string-on-url-like-via-clojure-protocol
+  (let [url       (url-like (URL. "http://seniorenland.com/index.php?cl=search&searchparam=sprechende armbanduhr herren"))
+        expected  (URL. "http://seniorenland.com/index.php?cl%3Dsearch%26searchparam%3Dsprechende+armbanduhr+herren")
+        mutated   (encode-query url)]
+    (is (equal-part-by-part expected mutated))))
+
+(deftest ^:focus test-encoding-of-query-string-on-string-via-clojure-protocol
+  (let [url       "http://seniorenland.com/index.php?cl=search&searchparam=sprechende armbanduhr herren"
+        expected  "http://seniorenland.com/index.php?cl%253Dsearch%2526searchparam%253Dsprechende+armbanduhr+herren"
+        mutated   (encode-query url)]
+    (is (= expected mutated))))
+
+;;
+;; mutate-query-with
+;;
+
+(deftest ^:focus test-mutation-of-query-string-with-fn-on-url-like-instance-via-clojure-protocol
+  (let [url       "https://secure.travis-ci.org/michaelklishin/urly.png?BRANCH=MASTER"
+        urly      (url-like url)
+        expected  (url-like "https://secure.travis-ci.org/michaelklishin/urly.png?branch=master")
+        mutated   (mutate-query-with urly (fn [^String s]
+                                            (.toLowerCase s)))]
+    (is (equal-part-by-part expected mutated))))
+
+
+;;
+;; UrlLike#mutateFragment, mutate-fragment
+;;
+
+(deftest test-mutation-of-fragment-on-url-like-instance-via-java-interop
   (let [url       (URL. "https://travis-ci.org/michaelklishin/urly#latest")
         urly      (url-like url)
         expected  (url-like (URL. "https://travis-ci.org/michaelklishin/urly#log"))
         mutated   (.mutateFragment urly "log")]
+    (is (equal-part-by-part expected mutated))))
+
+(deftest ^:focus test-mutation-of-fragment-on-url-like-instance-via-clojure-protocol
+  (let [url       "https://travis-ci.org/michaelklishin/urly#latest"
+        urly      (url-like url)
+        expected  (url-like "https://travis-ci.org/michaelklishin/urly#log")
+        mutated   (mutate-fragment urly "log")]
     (is (equal-part-by-part expected mutated))))
 
 

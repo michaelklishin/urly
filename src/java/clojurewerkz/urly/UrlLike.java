@@ -6,10 +6,8 @@ package clojurewerkz.urly;
 
 import com.google.common.net.InternetDomainName;
 
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.io.UnsupportedEncodingException;
+import java.net.*;
 
 public class UrlLike {
   public static final String DEFAULT_PROTOCOL = "http";
@@ -26,6 +24,7 @@ public class UrlLike {
   private String query;
   private String fragment;
   private static final int DEFAULT_PORT = -1;
+  private static final String DEFAULT_ENCODING = "UTF-8";
 
 
   protected UrlLike(String scheme, String userInfo, String host, int port, String path, String query, String fragment) {
@@ -45,6 +44,10 @@ public class UrlLike {
 
   public String getFragment() {
     return fragment;
+  }
+
+  public boolean hasFragment() {
+    return (fragment != null);
   }
 
   public String getRef() {
@@ -67,6 +70,10 @@ public class UrlLike {
     return port;
   }
 
+  public boolean hasNonDefaultPort() {
+    return ((port != DEFAULT_PORT) && (port != 0));
+  }
+
   public String getProtocol() {
     return protocol;
   }
@@ -77,6 +84,10 @@ public class UrlLike {
 
   public String getQuery() {
     return query;
+  }
+
+  public boolean hasQuery() {
+    return (query != null);
   }
 
   public String getUserInfo() {
@@ -173,6 +184,18 @@ public class UrlLike {
 
   public UrlLike mutateQuery(String query) {
     return new UrlLike(this.protocol, this.userInfo, this.host, this.port, this.path, query, this.fragment);
+  }
+
+  public UrlLike encodeQuery() throws UnsupportedEncodingException {
+    return this.encodeQuery(DEFAULT_ENCODING);
+  }
+
+  public UrlLike encodeQuery(String encoding) throws UnsupportedEncodingException {
+    if(this.hasQuery()) {
+      return this.mutateQuery(URLEncoder.encode(query, encoding));
+    } else {
+      return this;
+    }
   }
 
   public UrlLike mutateFragment(String fragment) {

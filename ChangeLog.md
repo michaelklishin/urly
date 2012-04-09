@@ -1,3 +1,25 @@
+## Changes between Urly 1.0.0-rc2 and 1.0.0-rc3 (not yet released)
+
+### Query mutation and encoding improvements
+
+New functions allow for query string mutation via function (much like Clojure atoms) and URL-encoding
+(note that Clojure API [uses UTF-8 encoding](http://docs.oracle.com/javase/7/docs/api/java/net/URLEncoder.html#encode%28java.lang.String%29)):
+
+ * `clojurewerkz.urly.core/mutate-query-with`
+ * `clojurewerkz.urly.core/encode-query`
+ * `clojurewerkz.urly.core/encode-fragment`
+
+
+### Java API improvements
+
+`clojurewerkz.urly.UrlLike` now has several additional methods:
+
+ * `UrlLike#hasQuery`
+ * `UrlLike#hasFragment`
+ * `UrlLike#hasNonDefaultPort`
+ * `UrlLike#encodeQuery`
+
+
 ## Changes between Urly 1.0.0-rc1 and 1.0.0-rc2
 
 Extra protocol elimination (for example `http://https://github.com` => `https://github.com`) is now
