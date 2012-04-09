@@ -1,6 +1,13 @@
-## Changes between Urly 1.0.0-rc3 and 1.0.0-rc4
+## Changes between Urly 1.0.0-rc4 and 1.0.0-rc5
 
 No changes yet.
+
+
+## Changes between Urly 1.0.0-rc3 and 1.0.0-rc4
+
+### clojurewerkz.urly.core/resolve now supports UrlLike
+
+`clojurewerkz.urly.core/resolve` now supports UrlLike instances
 
 
 ## Changes between Urly 1.0.0-rc2 and 1.0.0-rc3
