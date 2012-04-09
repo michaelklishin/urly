@@ -123,7 +123,10 @@
        (URI. "//clojure.org")
        (URI. "/Protocols")
        "//clojure.org"
-       "/Protocols"))
+       "/Protocols"
+       "dangerroom.html"
+       "google.com"
+       "amazon.co.uk"))
 
 (deftest test-relative?
   (are [input] (is (not (relative? input)))
@@ -141,7 +144,8 @@
        (url-like "//clojure.org/Protocols")
        (url-like "/Protocols")
        "//clojure.org"
-       "/Protocols"))
+       "/Protocols"
+       "dangerroom.html"))
 
 ;;
 ;; UrlLike#hasQuery, #hasFragment, etc
