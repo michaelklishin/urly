@@ -1,4 +1,9 @@
-## Changes between Urly 1.0.0-rc2 and 1.0.0-rc3 (not yet released)
+## Changes between Urly 1.0.0-rc3 and 1.0.0-rc4
+
+No changes yet.
+
+
+## Changes between Urly 1.0.0-rc2 and 1.0.0-rc3
 
 ### Query mutation and encoding improvements
 
