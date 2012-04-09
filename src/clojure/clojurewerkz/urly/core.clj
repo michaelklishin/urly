@@ -157,7 +157,7 @@
   (.resolve (URI. base) (URI. other)))
 (defmethod resolve [String String]
   [base other]
-  (.resolve (URI. base) (URI. other)))
+  (.toString (.resolve (URI. base) (URI. other))))
 (defmethod resolve [String java.net.URL]
   [base other]
   (.resolve (URI. base) (.toURI ^URL other)))

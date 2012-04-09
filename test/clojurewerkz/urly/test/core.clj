@@ -99,12 +99,17 @@
 ;; resolution
 ;;
 
-(deftest test-resolve
-  (is (= (resolve (URI. "http://clojure.org") (URI. "/Protocols"))                   (URI. "http://clojure.org/Protocols")))
-  (is (= (resolve (URI. "http://clojure.org") "/Protocols")                          (URI. "http://clojure.org/Protocols")))
-  (is (= (resolve (URI. "http://clojure.org") (URL. "http://clojure.org/Protocols")) (URI. "http://clojure.org/Protocols")))
-  (is (= (resolve "http://clojure.org"        (URI. "/Protocols"))                   (URI. "http://clojure.org/Protocols")))
-  (is (= (resolve "http://clojure.org"        (URL. "http://clojure.org/Protocols")) (URI. "http://clojure.org/Protocols"))))
+(deftest ^{:resolution true}
+  test-resolve
+  (are [a b result] (is (= (resolve a b) result))
+       (URI. "http://clojure.org")  (URI. "/Protocols") (URI. "http://clojure.org/Protocols")
+       (URI. "http://clojure.org")  "/Protocols"        (URI. "http://clojure.org/Protocols")
+       (URI. "http://clojure.org")  (URL. "http://clojure.org/Protocols") (URI. "http://clojure.org/Protocols")
+       "http://clojure.org"         (URI. "/Protocols")                   (URI. "http://clojure.org/Protocols")
+       "http://clojure.org"         (URL. "http://clojure.org/Protocols") (URI. "http://clojure.org/Protocols")
+       "http://domain.com"          "/de/bt/82-zahlungssysteme-ec-geraete-kartenterminals" "http://domain.com/de/bt/82-zahlungssysteme-ec-geraete-kartenterminals"
+       "http://domain.com"          "/search?query=something" "http://domain.com/search?query=something"
+       "http://domain.com/console/" "../search?query=something" "http://domain.com/search?query=something"))
 
 (deftest test-absolute?
   (are [input] (is (absolute? input))
@@ -400,16 +405,16 @@
             :tld "net"} (as-map (url-like url))))))
 
 (deftest ^:focus test-instantiating-url-like-from-a-string-path-that-has-unencoded-query-string
-  (let [url "http://seniorenland.com/index.php?cl=search&searchparam=sprechende armbanduhr herren"]
-    (is (= {:protocol "http"
-            :host "seniorenland.com"
-            :port -1
-            :user-info nil
-            :path "/index.php"
-            ;; minimal amount of encoding to avoid double-encoding. MK.
-            :query "cl=search&searchparam=sprechende%20armbanduhr%20herren"
-            :fragment nil
-            :tld "com"} (as-map (url-like url))))))
+         (let [url "http://seniorenland.com/index.php?cl=search&searchparam=sprechende armbanduhr herren"]
+           (is (= {:protocol "http"
+                   :host "seniorenland.com"
+                   :port -1
+                   :user-info nil
+                   :path "/index.php"
+                   ;; minimal amount of encoding to avoid double-encoding. MK.
+                   :query "cl=search&searchparam=sprechende%20armbanduhr%20herren"
+                   :fragment nil
+                   :tld "com"} (as-map (url-like url))))))
 
 ;;
 ;; UrlLike#mutateHostname

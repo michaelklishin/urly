@@ -10,6 +10,9 @@
   :source-paths ["src/clojure"]
   :java-source-paths ["src/java"]
   :javac-options      ["-target" "1.6" "-source" "1.6"]
-  :test-selectors {:default (fn [v] (not (:time-consuming v))),
-                   :focus   (fn [v] (:focus v))}
+  :test-selectors {:default    (fn [v] (not (:time-consuming v))),
+                   :focus      :focus
+                   :core       :core
+                   :mutation   :mutation
+                   :resolution :resolution}
   :warn-on-reflection true)
