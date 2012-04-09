@@ -17,7 +17,7 @@
 (defprotocol UrlLikeFactory
   (^clojurewerkz.urly.UrlLike url-like [input] "Instantiates a new UrlLike object"))
 
-(declare eliminate-extra-protocol-prefixes mutate-query mutate-query-with)
+(declare eliminate-extra-protocol-prefixes maybe-mutate-query-with encode-query)
 (extend-protocol UrlLikeFactory
   URI
   (url-like [^URI input]
@@ -39,7 +39,8 @@
         (let [inputs [(eliminate-extra-protocol-prefixes input)
                       (eliminate-extra-protocol-prefixes (.replaceAll input " " "%20"))]]
           (when-let [s (some uri-or-nil inputs)]
-            (url-like s))))))
+            (maybe-mutate-query-with (url-like s) (fn [^String qs]
+                                                    (.replaceAll qs " " "%20"))))))))
 
   UrlLike
   (url-like [^UrlLike input]
@@ -198,6 +199,7 @@
   (without-query-string-and-fragment [input] "Strips off query string and fragment. Returns value of the same type as input.")
   (mutate-query [input s] "Mutates query with given value")
   (mutate-query-with [input f] "Mutates query with given function")
+  (maybe-mutate-query-with [input f] "Mutates query with given function, given that query exists")
   (encode-query [input] "URL encodes query if a given input has one")
   (mutate-fragment [input s] "Mutates fragment with given value"))
 
@@ -209,6 +211,8 @@
     (.toURI ^UrlLike (mutate-query (url-like input) s)))
   (^java.net.URI mutate-query-with [^URI input f]
     (.toURI ^UrlLike (mutate-query-with (url-like input) f)))
+  (^java.net.URI maybe-mutate-query-with [^URI input f]
+    (.toURI ^UrlLike (maybe-mutate-query-with (url-like input) f)))
   (^java.net.URI encode-query [^URI input]
     (.toURI ^UrlLike (encode-query (url-like input))))
   (^java.net.URI mutate-fragment [^URI input s]
@@ -221,6 +225,8 @@
     (.toURL ^UrlLike (mutate-query (url-like input) s)))
   (^java.net.URL mutate-query-with [^URL input f]
     (.toURI ^UrlLike (mutate-query-with (url-like input) f)))
+  (^java.net.URL maybe-mutate-query-with [^URL input f]
+    (.toURI ^UrlLike (maybe-mutate-query-with (url-like input) f)))
   (^java.net.URL encode-query [^URL input]
     (.toURI ^UrlLike (encode-query (url-like input))))
   (^java.net.URL mutate-fragment [^URL input s]
@@ -233,6 +239,8 @@
     (.toString ^UrlLike (mutate-query (url-like input) s)))
   (^String mutate-query-with [^String input f]
     (.toString ^UrlLike (mutate-query (url-like input) f)))
+  (^String maybe-mutate-query-with [^String input f]
+    (.toString ^UrlLike (maybe-mutate-query-with (url-like input) f)))
   (^String encode-query [^String input]
     (.toString ^UrlLike (encode-query (url-like input))))
   (^String mutate-fragment [^String input s]
@@ -245,6 +253,10 @@
     (.mutateQuery input s))
   (^UrlLike mutate-query-with [^UrlLike input f]
     (.mutateQuery input (f (query-of input))))
+  (^UrlLike maybe-mutate-query-with [^UrlLike input f]
+    (if (.hasQuery input)
+      (mutate-query-with input f)
+      input))
   (^UrlLike encode-query [^UrlLike input]
     (.encodeQuery input))
   (^UrlLike mutate-fragment [^UrlLike input s]
