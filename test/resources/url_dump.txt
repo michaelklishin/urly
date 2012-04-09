@@ -1655,3 +1655,4 @@ http://seniorenland.com/wellness/schwimmspass/badehauben
 http://seniorenland.com/wellness/schwimmspass/strand-und-badeschuhe
 https://seniorenland.com/index.php?cl=account
 ldap://[2001:db8::7]/c=GB?objectClass?one
+http://seniorenland.com/cgi-bin/empfehlungen.cgi?action=jump&url=http://www.seniorentreff.de
