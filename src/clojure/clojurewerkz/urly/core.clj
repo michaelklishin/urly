@@ -163,13 +163,10 @@
   (.resolve (URI. base) (.toURI ^URL other)))
 (defmethod resolve [UrlLike java.net.URL]
   [base other]
-  (url-like (.resolve (.toURI base) (.toURI ^URL other))))
-(defmethod resolve [UrlLike java.net.URL]
-  [base other]
-  (url-like (.resolve (.toURI ^UrlLike base) (.toURI ^URL other))))
+  (url-like (.resolve ^URI (.toURI ^UrlLike base) ^URI (.toURI ^URL other))))
 (defmethod resolve [UrlLike java.net.URI]
   [base other]
-  (url-like (.resolve (.toURI ^UrlLike base) other)))
+  (url-like (.resolve ^URI (.toURI ^UrlLike base) other)))
 (defmethod resolve [UrlLike UrlLike]
   [base other]
   (url-like (.resolve (.toURI ^UrlLike base) (.toURI ^UrlLike other))))
