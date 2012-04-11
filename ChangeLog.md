@@ -1,6 +1,19 @@
-## Changes between Urly 1.0.0-rc4 and 1.0.0-rc5
+## Changes between Urly 1.0.0-rc5 and 1.0.0
 
 No changes yet.
+
+
+## Changes between Urly 1.0.0-rc4 and 1.0.0-rc5
+
+### Eliminated reflection warnings
+
+Reflection warnings for `clojurewerkz.urly.core/resolve` were eliminated.
+
+
+### Thousands new test cases
+
+Urly test suite now has about 3K more new test cases for the parser.
+
 
 
 ## Changes between Urly 1.0.0-rc3 and 1.0.0-rc4
