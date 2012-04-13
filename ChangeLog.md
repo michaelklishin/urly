@@ -1,3 +1,8 @@
+## Changes between Urly 1.0.0-rc6 and 1.0.0-rc7
+
+No changes yet.
+
+
 ## Changes between Urly 1.0.0-rc5 and 1.0.0-rc6
 
 ### UrlLike#getAuthority
