@@ -175,16 +175,19 @@
   (url-like (.resolve ^URI (.toURI ^UrlLike base) ^URI (.toURI ^URL other))))
 (defmethod resolve [UrlLike java.net.URI]
   [base other]
-  (url-like (.resolve ^URI (.toURI ^UrlLike base) other)))
+  (url-like (.resolve ^URI (.toURI ^UrlLike base) ^URI other)))
 (defmethod resolve [UrlLike UrlLike]
   [base other]
-  (url-like (.resolve (.toURI ^UrlLike base) (.toURI ^UrlLike other))))
+  (url-like (.resolve ^URI (.toURI ^UrlLike base) (.toURI ^UrlLike other))))
+(defmethod resolve [URI UrlLike]
+  [base other]
+  (url-like (.resolve ^URI base (.toURI ^UrlLike other))))
 
 
 
 (defprotocol Predicates
-  (absolute? [input] "Returns true if this URI/URL is absolute")
-  (root?     [input] "Returns true if given URL/URI is site root (normalized path is a slash)"))
+  (absolute?    [input] "Returns true if this URI/URL is absolute")
+  (domain-root? [input] "Returns true if given URL/URI is site root (normalized path is a slash)"))
 
 (extend-protocol Predicates
   UrlLike
@@ -289,6 +292,25 @@
   (^UrlLike mutate-fragment [^UrlLike input s]
     (.mutateFragment input s)))
 
+
+(defprotocol URLNormalization
+  (normalize-url  [input] "Normalizes URL by lowercasing host name, adding trailing slash at the end and so on, if necessary")
+  (absolutize     [rel base] "Resolves relative URLs against base"))
+
+(extend-protocol URLNormalization
+  String
+  (normalize-url [input]
+    (-> ^UrlLike (url-like input) .withoutWww .toString))
+  (absolutize [rel base]
+    (let [base (-> (url-like base) .withoutQueryStringAndFragment)
+          rel  (url-like (URI. rel))]
+      (.toString ^UrlLike (resolve base rel))))
+
+  URI
+  (normalize-url [input]
+    (-> ^UrlLike (url-like input) .withoutWww .toURI))
+  (absolutize [rel ^URI base]
+    (.resolve base rel)))
 
 
 ;;

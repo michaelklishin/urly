@@ -149,6 +149,31 @@
        "/Protocols"
        "dangerroom.html"))
 
+(deftest test-absolutize-with-strings
+  (are [rel base result] (is (= (absolutize rel  base) result))
+       ""  "http://giove.local"   "http://giove.local/"
+       ""  "http://giove.local/"  "http://giove.local/"
+       "/" "http://giove.local"   "http://giove.local/"
+       "/" "http://giove.local/"  "http://giove.local/"
+       "/comments?authenticate=1" "http://giove.local"  "http://giove.local/comments?authenticate=1"
+       "maintenance.html"  "http://giove.local/system/" "http://giove.local/system/maintenance.html"
+       "maintenance.html"  "http://giove.local/system"  "http://giove.local/maintenance.html"
+       "maintenance.html"  "http://giove.local/system/" "http://giove.local/system/maintenance.html"
+       "support/1.css" "http://tc.labs.opera.com/html/link/002.htm"  "http://tc.labs.opera.com/html/link/support/1.css"
+       "support/css"   "http://tc.labs.opera.com/html/link/002.htm"  "http://tc.labs.opera.com/html/link/support/css"
+       "http://www.iq-shop.de/catalogsearch/advanced/result/?___SID=U?product_type=54" "www.iq-shop.de" "http://www.iq-shop.de/catalogsearch/advanced/result/?___SID=U?product_type=54"
+       (URI. "")                                  (URI. "http://giove.local") (URI. "http://giove.local")
+       (URI. "/")                                 (URI. "http://giove.local") (URI. "http://giove.local/")
+       (URI. "/reviews")                          (URI. "http://giove.local") (URI. "http://giove.local/reviews")
+       (URI. "/autopia/2011/11/evs-go-off-grid/") (URI. "http://giove.local") (URI. "http://giove.local/autopia/2011/11/evs-go-off-grid/"))
+  (are [input result] (is (= (absolutize input "http://giove.local/") result))
+       ""                                  "http://giove.local/"
+       "/"                                 "http://giove.local/"
+       "/reviews"                          "http://giove.local/reviews"
+       "/autopia/2011/11/evs-go-off-grid/" "http://giove.local/autopia/2011/11/evs-go-off-grid/"
+       "offline.html"                      "http://giove.local/offline.html"))
+
+
 (deftest test-whether-uri-is-domain-root
   (is (domain-root? "http://giove.local"))
   (is (domain-root? (URL. "http://giove.local")))
@@ -434,16 +459,16 @@
             :tld "net"} (as-map (url-like url))))))
 
 (deftest ^:focus test-instantiating-url-like-from-a-string-path-that-has-unencoded-query-string
-         (let [url "http://seniorenland.com/index.php?cl=search&searchparam=sprechende armbanduhr herren"]
-           (is (= {:protocol "http"
-                   :host "seniorenland.com"
-                   :port -1
-                   :user-info nil
-                   :path "/index.php"
-                   ;; minimal amount of encoding to avoid double-encoding. MK.
-                   :query "cl=search&searchparam=sprechende%20armbanduhr%20herren"
-                   :fragment nil
-                   :tld "com"} (as-map (url-like url))))))
+  (let [url "http://seniorenland.com/index.php?cl=search&searchparam=sprechende armbanduhr herren"]
+    (is (= {:protocol "http"
+            :host "seniorenland.com"
+            :port -1
+            :user-info nil
+            :path "/index.php"
+            ;; minimal amount of encoding to avoid double-encoding. MK.
+            :query "cl=search&searchparam=sprechende%20armbanduhr%20herren"
+            :fragment nil
+            :tld "com"} (as-map (url-like url))))))
 
 ;;
 ;; UrlLike#mutateHostname
