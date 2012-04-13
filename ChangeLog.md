@@ -1,6 +1,10 @@
-## Changes between Urly 1.0.0-rc5 and 1.0.0
+## Changes between Urly 1.0.0-rc5 and 1.0.0-rc6
 
-No changes yet.
+### UrlLike#withoutWww
+
+`clojurewerkz.urly.UrlLike#withoutWww` is a Java API addition that eliminates `www.`, `www.2`, `www.11` and similar
+prefixes from the hostname.
+
 
 
 ## Changes between Urly 1.0.0-rc4 and 1.0.0-rc5
