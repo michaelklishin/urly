@@ -1,4 +1,4 @@
-(ns clojurewerkz.urly.test.core
+(ns clojurewerkz.urly.test.core-test
   (:refer-clojure :exclude [resolve])
   (:use [clojurewerkz.urly.core]
         [clojure.test])
