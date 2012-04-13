@@ -1,5 +1,10 @@
 ## Changes between Urly 1.0.0-rc5 and 1.0.0-rc6
 
+### UrlLike#getAuthority
+
+Authority (section 3.2 in [RFC 3986]()) is now recalculated when hostname, port or user info are mutated.
+
+
 ### UrlLike#withoutWww
 
 `clojurewerkz.urly.UrlLike#withoutWww` is a Java API addition that eliminates `www.`, `www.2`, `www.11` and similar

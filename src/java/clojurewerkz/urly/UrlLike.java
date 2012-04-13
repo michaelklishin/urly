@@ -9,10 +9,14 @@ import com.google.common.net.InternetDomainName;
 import java.io.UnsupportedEncodingException;
 import java.net.*;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class UrlLike {
   public static final String DEFAULT_PROTOCOL = "http";
   private static final String SLASH = "/";
   private static final String BLANK_STRING = "";
+  public static final String COLON = ":";
+  public static final String AT_SIGN = "@";
 
   private String protocol;
   private String userInfo;
@@ -27,10 +31,11 @@ public class UrlLike {
   private static final String DEFAULT_ENCODING = "UTF-8";
 
 
-  protected UrlLike(String scheme, String userInfo, String host, int port, String path, String query, String fragment) {
+  protected UrlLike(String scheme, String userInfo, String host, String authority, int port, String path, String query, String fragment) {
     this.protocol = lowerCaseOrNull(scheme);
     this.userInfo = userInfo;
     this.host =  lowerCaseOrNull(host);
+    this.authority = authority;
     this.port = port;
     this.path = pathOrDefault(path);
     this.query = query;
@@ -117,14 +122,17 @@ public class UrlLike {
   }
 
   public static UrlLike from(InternetDomainName idn) {
+    checkNotNull(idn);
     return fromInternetDomainName(idn);
   }
 
   public static UrlLike from(URI uri) {
+    checkNotNull(uri);
     return fromURI(uri);
   }
 
   public static UrlLike from(URL url) {
+    checkNotNull(url);
     return fromURL(url);
   }
 
@@ -133,28 +141,36 @@ public class UrlLike {
   }
 
   public static UrlLike fromInternetDomainName(InternetDomainName idn) {
-    return new UrlLike(DEFAULT_PROTOCOL, null, idn.name(), DEFAULT_PORT, SLASH, null, null);
+    checkNotNull(idn);
+    return new UrlLike(DEFAULT_PROTOCOL, null, idn.name(), idn.name(), DEFAULT_PORT, SLASH, null, null);
   }
 
   public static UrlLike fromURI(URI uri) {
-    return new UrlLike(lowerCaseOrNull(uri.getScheme()), uri.getUserInfo(), uri.getHost(), uri.getPort(), pathOrDefault(uri.getPath()), uri.getQuery(), uri.getFragment());
+    checkNotNull(uri);
+    return new UrlLike(lowerCaseOrNull(uri.getScheme()), uri.getUserInfo(), uri.getHost(), uri.getAuthority(), uri.getPort(), pathOrDefault(uri.getPath()), uri.getQuery(), uri.getFragment());
   }
 
   public static UrlLike fromURL(URL url) {
-    return new UrlLike(lowerCaseOrNull(url.getProtocol()), url.getUserInfo(), url.getHost(), url.getPort(), pathOrDefault(url.getPath()), url.getQuery(), url.getRef());
+    checkNotNull(url);
+    return new UrlLike(lowerCaseOrNull(url.getProtocol()), url.getUserInfo(), url.getHost(), url.getAuthority(), url.getPort(), pathOrDefault(url.getPath()), url.getQuery(), url.getRef());
   }
 
   public static UrlLike homepageOf(String hostname) {
-    return new UrlLike(DEFAULT_PROTOCOL, null, hostname, DEFAULT_PORT, SLASH, null, null);
+    checkNotNull(hostname);
+    return new UrlLike(DEFAULT_PROTOCOL, null, hostname, hostname, DEFAULT_PORT, SLASH, null, null);
   }
 
   public static UrlLike homepageOf(String hostname, String schema) {
-    return new UrlLike(lowerCaseOrNull(schema), null, hostname, DEFAULT_PORT, SLASH, null, null);
+    checkNotNull(hostname, "host cannot be null!");
+    checkNotNull(schema, "schema cannot be null!");
+    return new UrlLike(lowerCaseOrNull(schema), null, hostname, hostname, DEFAULT_PORT, SLASH, null, null);
   }
 
 
   public UrlLike mutateHost(String host) {
-    return new UrlLike(this.protocol, this.userInfo, host.toLowerCase(), this.port, this.path, this.query, this.fragment);
+    checkNotNull(host);
+    final String s = host.toLowerCase();
+    return new UrlLike(this.protocol, this.userInfo, s, authorityFor(this.userInfo, s, this.port), this.port, this.path, this.query, this.fragment);
   }
 
   public UrlLike mutateHostname(String host) {
@@ -166,11 +182,13 @@ public class UrlLike {
   }
 
   public UrlLike mutateProtocol(String protocol) {
-    return new UrlLike(protocol.toLowerCase(), this.userInfo, this.host, this.port, this.path, this.query, this.fragment);
+    checkNotNull(protocol);
+    return new UrlLike(protocol.toLowerCase(), this.userInfo, this.host, this.authority, this.port, this.path, this.query, this.fragment);
   }
 
   public UrlLike mutatePort(int port) {
-    return new UrlLike(this.protocol, this.userInfo, this.host, port, this.path, this.query, this.fragment);
+    checkNotNull(port);
+    return new UrlLike(this.protocol, this.userInfo, this.host, authorityFor(this.userInfo, this.host, port), port, this.path, this.query, this.fragment);
   }
 
   public UrlLike mutatePort(String port) {
@@ -178,16 +196,17 @@ public class UrlLike {
   }
 
   public UrlLike mutateUserInfo(String info) {
+    // note that user info may be null (when the intent is to clear it)
     // passwords are case-sensitive so don't lowercase user info. MK.
-    return new UrlLike(this.protocol, info, this.host, this.port, this.path, this.query, this.fragment);
+    return new UrlLike(this.protocol, info, this.host, this.authorityFor(info, this.host, this.port), this.port, this.path, this.query, this.fragment);
   }
 
   public UrlLike mutatePath(String path) {
-    return new UrlLike(this.protocol, this.userInfo, this.host, this.port, maybePrefixSlash(pathOrDefault(path)), this.query, this.fragment);
+    return new UrlLike(this.protocol, this.userInfo, this.host, this.authority, this.port, maybePrefixSlash(pathOrDefault(path)), this.query, this.fragment);
   }
 
   public UrlLike mutateQuery(String query) {
-    return new UrlLike(this.protocol, this.userInfo, this.host, this.port, this.path, query, this.fragment);
+    return new UrlLike(this.protocol, this.userInfo, this.host, this.authority, this.port, this.path, query, this.fragment);
   }
 
   public UrlLike encodeQuery() throws UnsupportedEncodingException {
@@ -195,6 +214,7 @@ public class UrlLike {
   }
 
   public UrlLike encodeQuery(String encoding) throws UnsupportedEncodingException {
+    checkNotNull(encoding);
     if(this.hasQuery()) {
       return this.mutateQuery(URLEncoder.encode(query, encoding));
     } else {
@@ -203,7 +223,8 @@ public class UrlLike {
   }
 
   public UrlLike mutateFragment(String fragment) {
-    return new UrlLike(this.protocol, this.userInfo, this.host, this.port, this.path, this.query, fragment);
+    // note that fragment may be null (when the intent is to clear it)
+    return new UrlLike(this.protocol, this.userInfo, this.host, this.authority, this.port, this.path, this.query, fragment);
   }
 
   public UrlLike withoutQueryStringAndFragment() {
@@ -258,10 +279,24 @@ public class UrlLike {
   }
 
   public static String maybePrefixSlash(String s) {
+    checkNotNull(s);
     if (s.startsWith(SLASH)) {
       return s;
     } else {
       return SLASH + s;
     }
+  }
+
+  private String authorityFor(String userInfo, String host, int port) {
+    checkNotNull(host);
+    StringBuilder newAuth = new StringBuilder();
+    if (userInfo != null) {
+      newAuth.append(userInfo).append(AT_SIGN);
+    }
+    newAuth.append(host.toLowerCase());
+    if(port != DEFAULT_PORT) {
+      newAuth.append(COLON).append(port);
+    }
+    return newAuth.toString();
   }
 }

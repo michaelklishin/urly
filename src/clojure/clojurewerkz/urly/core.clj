@@ -50,6 +50,7 @@
 (defprotocol PartsAccessors
   (^String protocol-of  [input] "Returns protocol of given input")
   (^String host-of      [input] "Returns host of given input")
+  (^String authority-of [input] "Returns authority ([ userinfo \"@\" ] host [ \":\" port ]) of given input")
   (^String port-of      [input] "Returns port of given input")
   (^String user-info-of [input] "Returns user information of given input")
   (^String path-of      [input] "Returns path of given input")
@@ -65,6 +66,8 @@
       (.toLowerCase s)))
   (host-of [^URI input]
     (-> input .getHost .toLowerCase))
+  (authority-of [^URI input]
+    (-> input .getAuthority .toLowerCase))
   (port-of [^URI input]
     (.getPort input))
   (user-info-of [^URI input]
@@ -84,6 +87,8 @@
     (protocol-of (.toURI input)))
   (host-of [^URL input]
     (host-of (.toURI input)))
+  (authority-of [^URL input]
+    (authority-of (.toURI input)))
   (port-of [^URL input]
     (.getPort input))
   (user-info-of [^URL input]
@@ -103,6 +108,8 @@
     (.getProtocol input))
   (host-of [^UrlLike input]
     (.getHost input))
+  (authority-of [^UrlLike input]
+    (.getAuthority input))
   (port-of [^UrlLike input]
     (.getPort input))
   (user-info-of [^UrlLike input]
@@ -121,6 +128,8 @@
     (protocol-of (url-like input)))
   (host-of [^String input]
     (host-of (url-like input)))
+  (authority-of [^String input]
+    (authority-of (url-like input)))
   (port-of [^String input]
     (port-of (url-like input)))
   (user-info-of [^String input]

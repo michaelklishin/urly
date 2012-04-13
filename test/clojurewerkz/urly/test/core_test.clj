@@ -178,14 +178,15 @@
   (let [uri      (URI. "http://apple.com/iphone")
         url-like (UrlLike/fromURI uri)
         host     "apple.com"]
-    (is (= host             (.getHost uri)))
-    (is (= host             (.getHost url-like)))
-    (is (= (.getScheme uri) (.getScheme   url-like)))
-    (is (= (.getScheme uri) (.getProtocol url-like)))
-    (is (= (.getHost uri)   (.getHost url-like)))
-    (is (= (.getPath uri)   (.getPath url-like)))
-    (is (= "/iphone"        (.getPath url-like)))
-    (is (= (.getPath uri)   (.getFile url-like)))))
+    (is (= host                (.getHost uri)))
+    (is (= host                (.getHost url-like)))
+    (is (= (.getScheme uri)    (.getScheme   url-like)))
+    (is (= (.getScheme uri)    (.getProtocol url-like)))
+    (is (= (.getHost uri)      (.getHost url-like)))
+    (is (= (.getAuthority uri) (.getAuthority url-like)))
+    (is (= (.getPath uri)      (.getPath url-like)))
+    (is (= "/iphone"           (.getPath url-like)))
+    (is (= (.getPath uri)      (.getFile url-like)))))
 
 (deftest test-instantiating-url-like-from-domain-name
   (let [uri      "arstechnica.com"
@@ -215,6 +216,7 @@
         host      "blahblah.smackernews.org"]
     (is (= host      (.getHost uri)))
     (is (= host      (.getHost url-like)))
+    (is (= host      (.getAuthority url-like)))
     (is (= ""        (.getPath uri)))
     (is (= path      (.getPath url-like)))
     (is (nil? (.getQuery uri)))
@@ -425,12 +427,24 @@
 ;;
 
 (deftest test-mutation-of-hostname
-  (let [url       (URL. "http://blahblah.smackernews.org/iphone")
-        urly      (url-like url)
-        expected  (url-like (URL. "http://apple.com/iphone"))
-        mutated   (.mutateHost urly "appLE.com")]
-    (is (equal-part-by-part expected mutated))
-    (is (= (host-of expected)      (host-of (.mutateHostname urly "apple.com"))))))
+  (testing "mutation of hostname when user info is missing"
+    (let [urly      (url-like (URL. "http://blahblah.smackernews.org/iphone"))
+          expected  (url-like (URL. "http://apple.com/iphone"))
+          mutated   (.mutateHost urly "appLE.com")]
+      (is (equal-part-by-part expected mutated))
+      (is (= (host-of expected)      (host-of (.mutateHostname urly "apple.com"))))))
+  (testing "mutation of hostname when user info is present"
+    (let [urly      (url-like (URL. "http://u:pwd@blahblah.smackernews.org/iphone"))
+          expected  (url-like (URL. "http://u:pwd@apple.com/iphone"))
+          mutated   (.mutateHost urly "appLE.com")]
+      (is (equal-part-by-part expected mutated))
+      (is (= "u:pwd@apple.com" (authority-of expected) (authority-of mutated)))))
+  (testing "mutation of hostname when user info and non-default port are present"
+    (let [urly      (url-like (URL. "http://u:pwd@blahblah.smackernews.org:8081/iphone"))
+          expected  (url-like (URL. "http://u:pwd@apple.com:8081/iphone"))
+          mutated   (.mutateHost urly "appLE.com")]
+      (is (equal-part-by-part expected mutated))
+      (is (= "u:pwd@apple.com:8081" (authority-of expected) (authority-of mutated))))))
 
 ;;
 ;; UrlLike#withoutWww
