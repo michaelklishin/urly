@@ -433,6 +433,34 @@
     (is (= (host-of expected)      (host-of (.mutateHostname urly "apple.com"))))))
 
 ;;
+;; UrlLike#withoutWww
+;;
+
+(deftest test-stripping-off-www
+  (testing "stripping off www not followed by a digit"
+    (let [urly     (url-like "http://www.apple.com")
+          expected (url-like "http://apple.com")
+          mutated  (.withoutWww urly)]
+      (is (equal-part-by-part expected mutated))))
+  (testing "stripping off www followed by a digit"
+    (let [urly     (url-like "http://www3.apple.com")
+          expected (url-like "http://apple.com")
+          mutated  (.withoutWww urly)]
+      (is (equal-part-by-part expected mutated))))
+  (testing "stripping off www followed by two digits"
+    (let [urly     (url-like "http://www39.apple.com")
+          expected (url-like "http://apple.com")
+          mutated  (.withoutWww urly)]
+      (is (equal-part-by-part expected mutated))))
+  (testing "stripping off www has no effect if www. is not in the leading position"
+    (let [urly     (url-like "http://domainwww.com")
+          expected (url-like "http://domainwww.com")
+          mutated  (.withoutWww urly)]
+      (is (equal-part-by-part expected mutated)))))
+
+
+
+;;
 ;; UrlLike#mutateProtocol
 ;;
 

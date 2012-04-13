@@ -161,6 +161,10 @@ public class UrlLike {
     return this.mutateHost(host);
   }
 
+  public UrlLike withoutWww() {
+    return this.mutateHost(host.replaceFirst("^www\\d*\\.", BLANK_STRING));
+  }
+
   public UrlLike mutateProtocol(String protocol) {
     return new UrlLike(protocol.toLowerCase(), this.userInfo, this.host, this.port, this.path, this.query, this.fragment);
   }
