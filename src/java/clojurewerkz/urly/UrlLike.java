@@ -71,6 +71,10 @@ public class UrlLike {
     return path;
   }
 
+  public boolean isDomainRoot() {
+    return (this.path == SLASH);
+  }
+
   public int getPort() {
     return port;
   }

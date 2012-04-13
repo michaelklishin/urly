@@ -111,7 +111,8 @@
        "http://domain.com"          "/search?query=something" "http://domain.com/search?query=something"
        "http://domain.com/console/" "../search?query=something" "http://domain.com/search?query=something"))
 
-(deftest test-absolute?
+(deftest ^{:resolution true}
+  test-absolute?
   (are [input] (is (absolute? input))
        (URI. "http://clojure.org")
        (URI. "http://clojure.org/Protocols")
@@ -128,7 +129,8 @@
        "google.com"
        "amazon.co.uk"))
 
-(deftest test-relative?
+(deftest ^{:resolution true}
+  test-relative?
   (are [input] (is (not (relative? input)))
        (URI. "http://clojure.org")
        (URI. "http://clojure.org/Protocols")
@@ -146,6 +148,27 @@
        "//clojure.org"
        "/Protocols"
        "dangerroom.html"))
+
+(deftest test-whether-uri-is-domain-root
+  (is (domain-root? "http://giove.local"))
+  (is (domain-root? (URL. "http://giove.local")))
+  (is (domain-root? (URL. "http://giove.local/")))
+  (is (domain-root? (URI. "http://giove.local")))
+  (is (domain-root? (URI. "http://giove.local/")))
+  (is (domain-root? "http://giove.local/"))
+  (is (domain-root? "https://giove.local"))
+  (is (domain-root? "https://giove.local/"))
+  (is (domain-root? "http://www.giove.local"))
+  (is (domain-root? "HTTPS://www.giove.local/"))
+  (is (domain-root? "https://subdomain.giove.local"))
+  (is (domain-root? "https://subdomain.giove.local/"))
+  (is (domain-root? "https://www.subdomain.giove.local"))
+  (is (domain-root? "http://www.subdomain.giove.local/"))
+  (is (not (domain-root? "http://giove.local/path")))
+  (is (not (domain-root? "https://giove.local/section/path")))
+  (is (not (domain-root? "HTTPS://www.giove.local/search?q=weather"))))
+
+
 
 ;;
 ;; UrlLike#hasQuery, #hasFragment, etc

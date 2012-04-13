@@ -182,25 +182,34 @@
 
 
 
-(defprotocol IsAbsolute
-  (absolute? [input] "Returns true if this URI/URL is absolute"))
+(defprotocol Predicates
+  (absolute? [input] "Returns true if this URI/URL is absolute")
+  (root?     [input] "Returns true if given URL/URI is site root (normalized path is a slash)"))
 
-(extend-protocol IsAbsolute
-  URI
-  (absolute? [^URI input]
-    (.isAbsolute input))
-
+(extend-protocol Predicates
   UrlLike
   (absolute? [^UrlLike input]
     (absolute? (.toURI input)))
+  (domain-root? [^UrlLike input]
+    (.isDomainRoot input))
+
+  URI
+  (absolute? [^URI input]
+    (.isAbsolute input))
+  (domain-root? [^URI input]
+    (domain-root? (url-like input)))
 
   URL
   (absolute? [^URL input]
     (absolute? (.toURI input)))
+  (domain-root? [^URL input]
+    (domain-root? (url-like input)))
 
   String
   (absolute? [^String input]
-    (absolute? (URI. input))))
+    (absolute? (URI. input)))
+  (domain-root? [^String input]
+    (domain-root? (url-like input))))
 
 
 (def relative? (complement absolute?))
