@@ -227,6 +227,8 @@
 
 (defprotocol Mutation
   (without-query-string-and-fragment [input] "Strips off query string and fragment. Returns value of the same type as input.")
+  (without-query-string [input] "Strips off query string. Returns value of the same type as input.")
+  (without-fragment [input] "Strips off fragment (#hash). Returns value of the same type as input.")
   (mutate-query [input s] "Mutates query with given value")
   (mutate-query-with [input f] "Mutates query with given function")
   (maybe-mutate-query-with [input f] "Mutates query with given function, given that query exists")
@@ -236,7 +238,11 @@
 (extend-protocol Mutation
   URI
   (^java.net.URI without-query-string-and-fragment [^URI input]
-    (.toURI ^UrlLike (without-query-string-and-fragment (UrlLike/fromURI input))))
+    (.toURI ^UrlLike (.withoutQueryStringAndFragment (UrlLike/fromURI input))))
+  (^java.net.URI without-query-string [^URI input]
+    (.toURI ^UrlLike (.withoutQuery (UrlLike/fromURI input))))
+  (^java.net.URI without-fragment [^URI input]
+    (.toURI ^UrlLike (.withoutFragment (UrlLike/fromURI input))))
   (^java.net.URI mutate-query [^URI input s]
     (.toURI ^UrlLike (mutate-query (url-like input) s)))
   (^java.net.URI mutate-query-with [^URI input f]
@@ -250,7 +256,11 @@
 
   URL
   (^java.net.URL without-query-string-and-fragment [^URL input]
-    (.toURL ^UrlLike (without-query-string-and-fragment (UrlLike/fromURL input))))
+    (.toURL ^UrlLike (.withoutQueryStringAndFragment (UrlLike/fromURL input))))
+  (^java.net.URL without-query-string [^URL input]
+    (.toURL ^UrlLike (.withoutQueryString (UrlLike/fromURL input))))
+  (^java.net.URL without-fragment [^URL input]
+    (.toURL ^UrlLike (.withoutFragment (UrlLike/fromURL input))))
   (^java.net.URL mutate-query [^URL input s]
     (.toURL ^UrlLike (mutate-query (url-like input) s)))
   (^java.net.URL mutate-query-with [^URL input f]
@@ -264,7 +274,11 @@
 
   String
   (^String without-query-string-and-fragment [^String input]
-    (.toString ^UrlLike (without-query-string-and-fragment (url-like input))))
+    (.toString ^UrlLike (.withoutQueryStringAndFragment (url-like input))))
+  (^String without-query-string [^String input]
+    (.toString ^UrlLike (.withoutQueryString (url-like input))))
+  (^String without-fragment [^String input]
+    (.toString ^UrlLike (.withoutFragment (url-like input))))
   (^String mutate-query [^String input s]
     (.toString ^UrlLike (mutate-query (url-like input) s)))
   (^String mutate-query-with [^String input f]
@@ -279,6 +293,10 @@
   UrlLike
   (^UrlLike without-query-string-and-fragment [^UrlLike input]
     (.withoutQueryStringAndFragment input))
+  (^UrlLike without-query-string [^UrlLike input]
+    (.withoutQueryString input))
+  (^UrlLike without-fragment [^UrlLike input]
+    (.withoutFragment input))
   (^UrlLike mutate-query [^UrlLike input s]
     (.mutateQuery input s))
   (^UrlLike mutate-query-with [^UrlLike input f]

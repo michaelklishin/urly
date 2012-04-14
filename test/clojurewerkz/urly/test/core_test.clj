@@ -693,7 +693,7 @@
   (is (= (without-query-string-and-fragment (URL. "http://giove.local/a/b/css?query=string#fragment")) (URL. "http://giove.local/a/b/css"))))
 
 (deftest test-without-fragment1
-  (let [urly (.withoutFragment (url-like "http://giove.local/a/b/css?query=string#fragment"))]
+  (let [^UrlLike urly (without-fragment (url-like "http://giove.local/a/b/css?query=string#fragment"))]
     (is (nil? (fragment-of urly)))
     (is (equal-part-by-part (url-like "http://giove.local/a/b/css?query=string")
                             (.withoutFragment urly)))))
@@ -702,7 +702,15 @@
   (let [urly (.withoutFragment (url-like "http://giove.local/a/b/css?query=string#"))]
     (is (nil? (fragment-of urly)))
     (is (equal-part-by-part (url-like "http://giove.local/a/b/css?query=string")
-                            (.withoutFragment urly)))))
+                            (without-fragment urly)))))
+
+(deftest test-without-fragment-with-strings
+  (are [a b] (is (equal-part-by-part (without-fragment (url-like a)) (url-like b)))
+    "http://www.giove.local/a/1.html?query=string#fragment" "http://www.giove.local/a/1.html?query=string"
+    "http://www.giove.local/a/1.html?query=string#"         "http://www.giove.local/a/1.html?query=string"
+    "http://www.giove.local/a/1.html#fragment"              "http://www.giove.local/a/1.html"
+    "http://www.giove.local/a/1.html#"                      "http://www.giove.local/a/1.html"
+    "http://www.giove.local/a/1.html"                       "http://www.giove.local/a/1.html"))
 
 (deftest test-to-uri
   (are [original expected] (is (= (.toURI (url-like original)) (URI. expected)))
