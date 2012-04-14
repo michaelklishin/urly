@@ -118,6 +118,10 @@ as their first argument.
   ;; the same via Clojure API
   (-> u (mutate-query "search=protocols")
         (.withoutQueryStringAndFragment))
+  ;; returns a UrlLike instance with the same parts as u but no query string
+  (.withoutQuery u)
+  ;; returns a UrlLike instance with the same parts as u but no fragment (#hash)
+  (.withoutFragment u)
   ;; returns a UrlLike instance that represents "http://clojuredocs.org/search?x=0&y=0&q=%22predicate+function%22~10"
   (-> u (mutate-query "x=0&y=0&q=%22PREDICATE+FUNCTION%22~10")
         (mutate-query-with (fn [^String s] (.toLowerCase s)))))
