@@ -171,7 +171,8 @@
        "/"                                 "http://giove.local/"
        "/reviews"                          "http://giove.local/reviews"
        "/autopia/2011/11/evs-go-off-grid/" "http://giove.local/autopia/2011/11/evs-go-off-grid/"
-       "offline.html"                      "http://giove.local/offline.html"))
+       "offline.html"                      "http://giove.local/offline.html"
+       "offline.html?q=items#segment"      "http://giove.local/offline.html?q=items#segment"))
 
 
 (deftest test-whether-uri-is-domain-root
@@ -690,6 +691,18 @@
 
 (deftest test-without-query-string-and-fragment4
   (is (= (without-query-string-and-fragment (URL. "http://giove.local/a/b/css?query=string#fragment")) (URL. "http://giove.local/a/b/css"))))
+
+(deftest test-without-fragment1
+  (let [urly (.withoutFragment (url-like "http://giove.local/a/b/css?query=string#fragment"))]
+    (is (nil? (fragment-of urly)))
+    (is (equal-part-by-part (url-like "http://giove.local/a/b/css?query=string")
+                            (.withoutFragment urly)))))
+
+(deftest test-without-fragment2
+  (let [urly (.withoutFragment (url-like "http://giove.local/a/b/css?query=string#"))]
+    (is (nil? (fragment-of urly)))
+    (is (equal-part-by-part (url-like "http://giove.local/a/b/css?query=string")
+                            (.withoutFragment urly)))))
 
 (deftest test-to-uri
   (are [original expected] (is (= (.toURI (url-like original)) (URI. expected)))

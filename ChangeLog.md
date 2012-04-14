@@ -1,5 +1,13 @@
 ## Changes between Urly 1.0.0-rc6 and 1.0.0
 
+### Java API improvements
+
+`clojurewerkz.urly.UrlLike` now has several additional methods:
+
+ * `UrlLike#withoutQuery`
+ * `UrlLike#withoutFragment`
+
+
 ### New functions
 
 `clojurewerkz.urly.core/absolutize` and `clojurewerkz.urly.core/normalize-url` were extracted from [Crawlista](https://github.com/michaelklishin/crawlista)

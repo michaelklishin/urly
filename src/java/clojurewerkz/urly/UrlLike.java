@@ -235,6 +235,18 @@ public class UrlLike {
     return this.mutateQuery(null).mutateFragment(null);
   }
 
+  public UrlLike withoutQuery() {
+    return this.mutateQuery(null);
+  }
+
+  public UrlLike withoutQueryString() {
+    return this.withoutQuery();
+  }
+
+  public UrlLike withoutFragment() {
+    return this.mutateFragment(null);
+  }
+
   public UrlLike withoutLastPathSegment() {
     return this.mutatePath(this.path.replaceAll("[^/]+$", ""));
   }
