@@ -1,6 +1,7 @@
 (ns clojurewerkz.urly.core
   (:refer-clojure :exclude [resolve])
   (:require [clojure.stacktrace :as strace])
+  (:use [clojure.string :only [split]])
   (:import [clojurewerkz.urly UrlLike]
            [java.net URI URL URLEncoder]
            [com.google.common.net InternetDomainName]))
@@ -311,6 +312,10 @@
     (.mutateFragment input s)))
 
 
+(defn- separate-query-string
+  [^String s]
+  (split s #"\?" 2))
+
 (defprotocol URLNormalization
   (normalize-url  [input] "Normalizes URL by lowercasing host name, adding trailing slash at the end and so on, if necessary")
   (absolutize     [rel base] "Resolves relative URLs against base"))
@@ -320,9 +325,15 @@
   (normalize-url [input]
     (-> ^UrlLike (url-like input) .withoutWww .toString))
   (absolutize [rel base]
-    (let [base (-> (url-like base) .withoutQueryStringAndFragment)
-          rel  (url-like (URI. rel))]
-      (.toString ^UrlLike (resolve base rel))))
+    (let [base   (-> (url-like base) .withoutQueryStringAndFragment)
+          ;; don't pass query string and fragment to the java.net.URI constructor to handle cases like
+          ;; ?comments=1#comments-bar#comments-bar (repeated fragment)
+          [s qs] (separate-query-string rel)
+          rel  (url-like (URI. s))
+          ^UrlLike res (resolve base rel)]
+      (if qs
+        (str (.toString res) "?" qs)
+        (.toString res))))
 
   URI
   (normalize-url [input]

@@ -231,6 +231,10 @@ public class UrlLike {
     return new UrlLike(this.protocol, this.userInfo, this.host, this.authority, this.port, this.path, this.query, fragment);
   }
 
+  public UrlLike mutateQueryAndFragment(String query, String fragment) {
+    return new UrlLike(this.protocol, this.userInfo, this.host, this.authority, this.port, this.path, query, fragment);
+  }
+
   public UrlLike withoutQueryStringAndFragment() {
     return this.mutateQuery(null).mutateFragment(null);
   }

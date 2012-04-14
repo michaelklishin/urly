@@ -162,6 +162,7 @@
        "support/1.css" "http://tc.labs.opera.com/html/link/002.htm"  "http://tc.labs.opera.com/html/link/support/1.css"
        "support/css"   "http://tc.labs.opera.com/html/link/002.htm"  "http://tc.labs.opera.com/html/link/support/css"
        "http://www.iq-shop.de/catalogsearch/advanced/result/?___SID=U?product_type=54" "www.iq-shop.de" "http://www.iq-shop.de/catalogsearch/advanced/result/?___SID=U?product_type=54"
+       "/gadgets/news/2011/11/arms-new-tools-make-it-easier-for-android-devs-to-use-native-code.ars?comments=1#comments-bar#comments-bar" "http://arstechnica.com" "http://arstechnica.com/gadgets/news/2011/11/arms-new-tools-make-it-easier-for-android-devs-to-use-native-code.ars?comments=1#comments-bar#comments-bar"
        (URI. "")                                  (URI. "http://giove.local") (URI. "http://giove.local")
        (URI. "/")                                 (URI. "http://giove.local") (URI. "http://giove.local/")
        (URI. "/reviews")                          (URI. "http://giove.local") (URI. "http://giove.local/reviews")
