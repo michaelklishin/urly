@@ -1,6 +1,8 @@
-## Changes between Urly 1.0.0-rc6 and 1.0.0-rc7
+## Changes between Urly 1.0.0-rc6 and 1.0.0
 
-No changes yet.
+### New functions
+
+`clojurewerkz.urly.core/absolutize` and `clojurewerkz.urly.core/normalize-url` were extracted from [Crawlista](https://github.com/michaelklishin/crawlista)
 
 
 ## Changes between Urly 1.0.0-rc5 and 1.0.0-rc6
