@@ -10,6 +10,9 @@
 
 ### New functions
 
+`clojurewerkz.urly.core/without-query-string` and `clojurewerkz.urly.core/without-fragment` were added, similar in purpose with
+`clojurewerkz.urly.core/without-query-string-and-fragment`.
+
 `clojurewerkz.urly.core/absolutize` and `clojurewerkz.urly.core/normalize-url` were extracted from [Crawlista](https://github.com/michaelklishin/crawlista)
 
 
