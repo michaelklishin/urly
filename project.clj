@@ -10,6 +10,10 @@
   :source-paths ["src/clojure"]
   :java-source-paths ["src/java"]
   :javac-options      ["-target" "1.6" "-source" "1.6"]
+  :repositories {"clojure-releases" "http://build.clojure.org/releases"
+                 "sonatype" {:url "http://oss.sonatype.org/content/repositories/releases"
+                             :snapshots false,
+                             :releases {:checksum :fail :update :always}}}  
   :test-selectors {:default    (fn [v] (not (:time-consuming v))),
                    :focus      :focus
                    :core       :core
