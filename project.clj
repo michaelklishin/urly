@@ -5,7 +5,7 @@
   :dependencies [[org.clojure/clojure "1.3.0"]
                  [com.google.guava/guava "11.0.1"]]
   :profiles {:dev {:resource-paths ["test/resources"]}
-             :1.4 { :dependencies [[org.clojure/clojure "1.4.0-beta7"]] }}
+             :1.4 { :dependencies [[org.clojure/clojure "1.4.0"]] }}
   :aliases  { "all" ["with-profile" "dev:dev,1.4"] }
   :source-paths ["src/clojure"]
   :java-source-paths ["src/java"]
