@@ -1,3 +1,8 @@
+## Changes between Urly 1.0.0 and 2.0.0-alpha1
+
+No changes yet.
+
+
 ## Changes between Urly 1.0.0-rc6 and 1.0.0
 
 ### Java API improvements
