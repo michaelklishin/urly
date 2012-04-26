@@ -5,16 +5,19 @@
   :dependencies [[org.clojure/clojure "1.3.0"]
                  [com.google.guava/guava "11.0.1"]]
   :profiles {:dev {:resource-paths ["test/resources"]}
-             :1.4 { :dependencies [[org.clojure/clojure "1.4.0"]] }}
-  :aliases  { "all" ["with-profile" "dev:dev,1.4"] }
+             :1.4 {:dependencies [[org.clojure/clojure "1.4.0"]]}
+             :1.5 {:dependencies [[org.clojure/clojure "1.5.0-master-SNAPSHOT"]]}}
+  :aliases  {"all" ["with-profile" "dev:dev,1.4:dev,1.5"]}
   :source-paths ["src/clojure"]
   :java-source-paths ["src/java"]
   :javac-options      ["-target" "1.6" "-source" "1.6"]
-  :repositories {"clojure-releases" "http://build.clojure.org/releases"
-                 "sonatype" {:url "http://oss.sonatype.org/content/repositories/releases"
-                             :snapshots false,
-                             :releases {:checksum :fail :update :always}}}  
-  :test-selectors {:default    (fn [v] (not (:time-consuming v))),
+  :repositories {"sonatype" {:url "http://oss.sonatype.org/content/repositories/releases"
+                             :snapshots false
+                             :releases {:checksum :fail :update :always}}
+                 "sonatype-snapshots" {:url "http://oss.sonatype.org/content/repositories/snapshots"
+                               :snapshots true
+                               :releases {:checksum :fail :update :always}}}
+  :test-selectors {:default    (fn [v] (not (:time-consuming v)))
                    :focus      :focus
                    :core       :core
                    :mutation   :mutation
