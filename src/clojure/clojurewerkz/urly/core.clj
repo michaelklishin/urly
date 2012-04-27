@@ -59,7 +59,6 @@
   (^String fragment-of  [input] "Returns fragment of given input")
   (^String tld-of       [input] "Returns top-level domain (public suffix) name of given input"))
 
-
 (extend-protocol PartsAccessors
   URI
   (protocol-of [^URI input]
@@ -230,9 +229,9 @@
   (without-query-string-and-fragment [input] "Strips off query string and fragment. Returns value of the same type as input.")
   (without-query-string [input] "Strips off query string. Returns value of the same type as input.")
   (without-fragment [input] "Strips off fragment (#hash). Returns value of the same type as input.")
-  (mutate-query [input s] "Mutates query with given value")
-  (mutate-query-with [input f] "Mutates query with given function")
-  (maybe-mutate-query-with [input f] "Mutates query with given function, given that query exists")
+  (mutate-query [input s] "Mutates query string with given value")
+  (mutate-query-with [input f] "Mutates query string with given function")
+  (maybe-mutate-query-with [input f] "Mutates query string with given function if query string exists")
   (encode-query [input] "URL encodes query if a given input has one")
   (mutate-fragment [input s] "Mutates fragment with given value"))
 
