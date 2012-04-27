@@ -10,7 +10,7 @@
   :aliases  {"all" ["with-profile" "dev:dev,1.4:dev,1.5"]}
   :source-paths ["src/clojure"]
   :java-source-paths ["src/java"]
-  :javac-options      ["-target" "1.6" "-source" "1.6"]
+  :javac-options     ["-target" "1.6" "-source" "1.6"]
   :repositories {"sonatype" {:url "http://oss.sonatype.org/content/repositories/releases"
                              :snapshots false
                              :releases {:checksum :fail :update :always}}
