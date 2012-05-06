@@ -522,6 +522,28 @@
           mutated  (.withoutWww urly)]
       (is (equal-part-by-part expected mutated)))))
 
+(deftest test-prefexing-with-www
+  (testing "does nothing to a URL with www not followed by a digit"
+    (let [urly     (url-like "http://www.apple.com")
+          expected (url-like "http://www.apple.com")
+          mutated  (.withWww urly)]
+      (is (equal-part-by-part expected mutated))))
+  (testing "does nothing to a URL with www followed by a digit"
+    (let [urly     (url-like "http://www3.apple.com")
+          expected (url-like "http://www3.apple.com")
+          mutated  (.withWww urly)]
+      (is (equal-part-by-part expected mutated))))
+  (testing "does nothing to a URL with www followed by two digits"
+    (let [urly     (url-like "http://wwW39.apple.com")
+          expected (url-like "http://wwW39.apple.com")
+          mutated  (.withWww urly)]
+      (is (equal-part-by-part expected mutated))))
+  (testing "adds www. prefix to URLs without one"
+    (let [urly     (url-like "http://domainwww.com")
+          expected (url-like "http://www.domainwww.com")
+          mutated  (.withWww urly)]
+      (is (equal-part-by-part expected mutated)))))
+
 
 
 ;;

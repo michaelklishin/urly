@@ -8,6 +8,7 @@ import com.google.common.net.InternetDomainName;
 
 import java.io.UnsupportedEncodingException;
 import java.net.*;
+import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -17,6 +18,7 @@ public class UrlLike {
   private static final String BLANK_STRING = "";
   public static final String COLON = ":";
   public static final String AT_SIGN = "@";
+  public static final String WWW_PREFIX = "^www\\d*\\.";
 
   private String protocol;
   private String userInfo;
@@ -182,7 +184,16 @@ public class UrlLike {
   }
 
   public UrlLike withoutWww() {
-    return this.mutateHost(host.replaceFirst("^www\\d*\\.", BLANK_STRING));
+    return this.mutateHost(host.replaceFirst(WWW_PREFIX, BLANK_STRING));
+  }
+
+  public static Pattern WWW_PREFIX_PATTERN = Pattern.compile(WWW_PREFIX);
+  public UrlLike withWww() {
+    if(WWW_PREFIX_PATTERN.matcher(this.host).find())  {
+      return this;
+    } else {
+      return this.mutateHost("www." + host);
+    }
   }
 
   public UrlLike mutateProtocol(String protocol) {
