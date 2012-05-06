@@ -1,6 +1,15 @@
+## Changes between Urly 2.0.0-alpha1 and 2.0.0-alpha2
+
+No changes.
+
+
+
 ## Changes between Urly 1.0.0 and 2.0.0-alpha1
 
-No changes yet.
+### UrlLike#withWww
+
+`UrlLike#withWww` does the opposite of `UrlLike#withoutWww`
+
 
 
 ## Changes between Urly 1.0.0-rc6 and 1.0.0
