@@ -144,8 +144,8 @@ CI is hosted by [travis-ci.org](http://travis-ci.org)
 
 ## Urly Is a ClojureWerkz Project
 
-Urly is part of the group of libraries known as ClojureWerkz, together with
-[Monger](https://github.com/michaelklishin/monger), [Neocons](https://github.com/michaelklishin/neocons), [Langohr](https://github.com/michaelklishin/langohr), [Elastisch](https://github.com/clojurewerkz/elastisch), [Quartzite](https://github.com/michaelklishin/quartzite) and several others.
+Urly is part of the group of [Clojure libraries](http://clojurewerkz.org) known as ClojureWerkz, together with
+[Monger](https://github.com/michaelklishin/monger), [Neocons](https://github.com/michaelklishin/neocons), [Langohr](https://github.com/michaelklishin/langohr), [Elastisch](https://github.com/clojurewerkz/elastisch), [Quartzite](https://github.com/michaelklishin/quartzite), [Welle](https://github.com/michaelklishin/welle) and several others.
 
 
 
