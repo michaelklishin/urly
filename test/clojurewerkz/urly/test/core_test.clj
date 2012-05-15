@@ -784,4 +784,4 @@
     (url-like "http://store.apple.com/us/browse/home/shop_mac/family/macbook_pro") 6
     (java.net.URI. "http://store.apple.com/us/browse/home/shop_mac/family/macbook_pro") 6
     (java.net.URL. "http://store.apple.com/us/browse/home/shop_mac/family/macbook_pro") 6
-    (url-like "http://www.amazon.com/Clojure-Programming-ebook/dp/B007Q4T040/ref=tmm_kin_title_0?ie=UTF8&m=A2JEPUQV26074G&qid=1337080272&sr=8-1" 4)))
+    (url-like "http://www.amazon.com/Clojure-Programming-ebook/dp/B007Q4T040/ref=tmm_kin_title_0?ie=UTF8&m=A2JEPUQV26074G&qid=1337080272&sr=8-1") 4))
