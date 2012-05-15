@@ -1,6 +1,23 @@
 ## Changes between Urly 2.0.0-alpha1 and 2.0.0-alpha2
 
-No changes.
+### New functions
+
+`clojurewerkz.urly.core/count-segments` can be used to calculate number of segments in the path:
+
+``` clojure
+(count-segments "http://apple.com") ;; => 0
+(count-segments "http://apple.com/") ;; => 0
+(count-segments"/") ;; => 0
+(count-segments "http://apple.com/iphone") ;; => 1
+(count-segments "/iphone") ;; => 1
+(count-segments "http://apple.com/iphone/") ;; => 1
+(count-segments "/iphone/") ;; => 1
+(count-segments "http://store.apple.com/us/browse/home/shop_mac/family/mac_pro") ;; => 6
+(count-segments (url-like "http://store.apple.com/us/browse/home/shop_mac/family/macbook_pro")) ;; => 6
+(count-segments (java.net.URI. "http://store.apple.com/us/browse/home/shop_mac/family/macbook_pro")) ;; => 6
+(count-segments (java.net.URL. "http://store.apple.com/us/browse/home/shop_mac/family/macbook_pro")) ;; => 6
+(count-segments (url-like "http://www.amazon.com/Clojure-Programming-ebook/dp/B007Q4T040/ref=tmm_kin_title_0?ie=UTF8&m=A2JEPUQV26074G&qid=1337080272&sr=8-1")) ;; => 4
+```
 
 
 

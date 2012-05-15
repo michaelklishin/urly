@@ -1,7 +1,7 @@
 (ns clojurewerkz.urly.core
   (:refer-clojure :exclude [resolve])
   (:require [clojure.stacktrace :as strace])
-  (:use [clojure.string :only [split]])
+  (:use [clojure.string :only [split blank?]])
   (:import [clojurewerkz.urly UrlLike]
            [java.net URI URL URLEncoder]
            [com.google.common.net InternetDomainName]))
@@ -354,3 +354,36 @@
     (if proto
       (.replaceFirst s extra-protocol-re-str (str proto "://"))
       s)))
+
+
+
+;;
+;; Segments
+;;
+
+(def ^{:const true}
+  slash-re #"/")
+
+(defprotocol SegmentablePath
+  (count-segments [input] "Returns number of slash-separated segments in the path"))
+
+(extend-protocol SegmentablePath
+  String
+  (count-segments [^String s]
+    (let [s (if (absolute? s)
+              (path-of (url-like s))
+              s)]
+      (count (remove blank? (split s slash-re)))))
+
+  URL
+  (count-segments [^URL url]
+    (count-segments (url-like url)))
+
+  URI
+  (count-segments [^URI uri]
+    (count-segments (url-like uri)))
+
+  UrlLike
+  (count-segments [^UrlLike ul]
+    (count (remove blank? (split (.getPath ul) slash-re)))))
+
