@@ -143,8 +143,27 @@
   (tld-of [^String input]
     (let [idn (InternetDomainName/from input)]
       (when (.hasPublicSuffix idn)
-        (-> idn .publicSuffix .name)))))
+        (-> idn .publicSuffix .name))))
 
+  nil
+  (protocol-of [input]
+    nil)
+  (host-of [input]
+    nil)
+  (authority-of [input]
+    nil)
+  (port-of [input]
+    nil)
+  (user-info-of [input]
+    nil)
+  (path-of [input]
+    nil)
+  (query-of [input]
+    nil)
+  (fragment-of [input]
+    nil)
+  (tld-of [input]
+    nil))
 
 ;; protocols dispatch on the 1st argument, here we need to dispatch on
 ;; first two. MK.
