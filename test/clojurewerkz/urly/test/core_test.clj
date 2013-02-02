@@ -796,3 +796,13 @@
        (path-of nil)
        (query-of nil)
        (tld-of nil)))
+
+
+;;
+;; Path escaping
+;;
+
+(deftest test-path-escaping
+  (are [input output] (is (= (encode-path input) output))
+    "nodes" "nodes"
+    "no des" "no%20des"))

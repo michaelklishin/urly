@@ -1,6 +1,19 @@
 ## Changes between Urly 2.0.0-alpha3 and 2.0.0-alpha4
 
-No changes yet.
+### Path Encoding
+
+`clojurewerkz.urly.core/encode-path` encodes argument as URI path.
+
+See [What Every Developer Should Know About URL Encoding](http://www.lunatech-research.com/archives/2009/02/03/what-every-web-developer-must-know-about-url-encoding#Thereservedcharactersaredifferentforeachpart) for more information.
+
+### Clojure 1.4 By Default
+
+Urly now depends on `org.clojure/clojure` version `1.4.0`. It is still
+compatible with Clojure 1.3 and if your `project.clj` depends on 1.3,
+it will be used, but 1.4 is the default now.
+
+We encourage all users to upgrade to 1.4, it is a drop-in replacement
+for the majority of projects out there.
 
 ## Changes between Urly 2.0.0-alpha2 and 2.0.0-alpha3
 

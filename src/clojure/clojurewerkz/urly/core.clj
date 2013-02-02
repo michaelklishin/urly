@@ -406,3 +406,17 @@
   (count-segments [^UrlLike ul]
     (count (remove blank? (split (.getPath ul) slash-re)))))
 
+
+;;
+;; Individual part encoding
+;;
+
+(defn encode-path
+  "Escapes input as URI path"
+  [^String path]
+  (let [u (URI. nil
+                nil
+                path
+                nil
+                nil)]
+    (.toASCIIString u)))
