@@ -411,7 +411,7 @@
 ;; Individual part encoding
 ;;
 
-(defn encode-path
+(defn _encode-path
   "Escapes input as URI path"
   [^String path]
   (let [u (URI. nil
@@ -420,3 +420,7 @@
                 nil
                 nil)]
     (.toASCIIString u)))
+
+(defn ^String encode-path
+  [^String s]
+  (.replace (URLEncoder/encode s) "+" "%20"))
