@@ -1,3 +1,11 @@
+## Changes between Urly 2.0.0-alpha4 and 2.0.0-alpha5
+
+### Path Encoding
+
+`clojurewerkz.urly.core/encode-path` now handles colons in URI path.
+
+
+
 ## Changes between Urly 2.0.0-alpha3 and 2.0.0-alpha4
 
 ### Path Encoding
