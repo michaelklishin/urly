@@ -805,4 +805,5 @@
 (deftest test-path-escaping
   (are [input output] (is (= (encode-path input) output))
     "nodes" "nodes"
-    "no des" "no%20des"))
+    "no des" "no%20des"
+    "no des with:" "no%20des%20with%3A"))
