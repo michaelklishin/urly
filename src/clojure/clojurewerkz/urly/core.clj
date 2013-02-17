@@ -422,5 +422,6 @@
     (.toASCIIString u)))
 
 (defn ^String encode-path
+  "Escapes input as URI path"
   [^String s]
   (.replace (URLEncoder/encode s) "+" "%20"))
