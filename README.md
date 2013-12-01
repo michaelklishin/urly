@@ -56,12 +56,12 @@ as their first argument.
 ;; Instantiate a UrlLike instance
 (url-like (URL. "http://clojure.org"))
 (url-like (URI. "http://clojure.org"))
-(url-like "http://clojure.org"))
+(url-like "http://clojure.org")
 
 ;; unline java.net.URI, valid Internet domain names like "clojure.org" and "amazon.co.uk"
 ;; will be recognized as hostname, not paths
-(url-like "clojure.org"))
-(url-like "amazon.co.uk"))
+(url-like "clojure.org")
+(url-like "amazon.co.uk")
 
 
 ;; accessing parts of the URL
