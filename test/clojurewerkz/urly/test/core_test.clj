@@ -761,7 +761,7 @@
 
 (deftest test-tld-of
   (are [domain tld] (is (= (tld-of domain) tld))
-       "giove.local"                "local"
+       "giove.local"                nil
        "giove"                      nil
        "clojure.org"                "org"
        "www.clojure.org"            "org"
