@@ -143,7 +143,8 @@
   (tld-of [^String input]
     (let [idn (InternetDomainName/from input)]
       (when (.hasPublicSuffix idn)
-        (-> idn .publicSuffix .name))))
+        (if-let [pub-suffix (.publicSuffix idn)]
+          (str pub-suffix)))))
 
   nil
   (protocol-of [input]

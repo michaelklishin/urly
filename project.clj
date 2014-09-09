@@ -2,12 +2,13 @@
   :description "A tiny Clojure library that parses URIs, URLs and relative values that real world HTML may contain"
   :min-lein-version "2.4.3"
   :license {:name "Eclipse Public License"}
-  :dependencies [[org.clojure/clojure "1.4.0"]
-                 [com.google.guava/guava "11.0.1"]]
+  :dependencies [[org.clojure/clojure "1.6.0"]
+                 [com.google.guava/guava "18.0"]]
   :profiles {:dev {:resource-paths ["test/resources"]}
              :1.3 {:dependencies [[org.clojure/clojure "1.3.0"]]}
-             :1.5 {:dependencies [[org.clojure/clojure "1.5.0-RC16"]]}}
-  :aliases  {"all" ["with-profile" "dev:dev,1.3:dev,1.5"]}
+             :1.4 {:dependencies [[org.clojure/clojure "1.4.0"]]}
+             :1.5 {:dependencies [[org.clojure/clojure "1.5.1"]]}}
+  :aliases  {"all" ["with-profile" "dev:dev,1.3:dev,1.4:dev,1.5"]}
   :source-paths ["src/clojure"]
   :java-source-paths ["src/java"]
   :javac-options     ["-target" "1.6" "-source" "1.6"]
