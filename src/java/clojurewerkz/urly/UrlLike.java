@@ -121,7 +121,7 @@ public class UrlLike {
   public String getTld() {
     InternetDomainName idn = this.getPublicSuffix();
     if (idn != null) {
-      return idn.name();
+      return idn.toString();
     } else {
       return null;
     }
@@ -148,7 +148,7 @@ public class UrlLike {
 
   public static UrlLike fromInternetDomainName(InternetDomainName idn) {
     checkNotNull(idn);
-    return new UrlLike(DEFAULT_PROTOCOL, null, idn.name(), idn.name(), DEFAULT_PORT, SLASH, null, null);
+    return new UrlLike(DEFAULT_PROTOCOL, null, idn.toString(), idn.toString(), DEFAULT_PORT, SLASH, null, null);
   }
 
   public static UrlLike fromURI(URI uri) {
