@@ -154,8 +154,8 @@ Urly is part of the group of [Clojure libraries](http://clojurewerkz.org) known 
 Urly uses [Leiningen 2](https://github.com/technomancy/leiningen/blob/master/doc/TUTORIAL.md). Make
 sure you have it installed and then run tests against all supported Clojure versions using
 
-    lein2 with-profile dev javac
-    lein2 all test
+    lein with-profile dev javac
+    lein all test
 
 Then create a branch and make your changes on it. Once you are done with your changes and all
 tests pass, submit a pull request on Github.
