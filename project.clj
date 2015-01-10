@@ -1,6 +1,6 @@
 (defproject clojurewerkz/urly "2.0.0-SNAPSHOT"
   :description "A tiny Clojure library that parses URIs, URLs and relative values that real world HTML may contain"
-  :min-lein-version "2.5.0"
+  :min-lein-version "2.5.1"
   :license {:name "Eclipse Public License"}
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [com.google.guava/guava "18.0"]]
