@@ -6,7 +6,7 @@
                  [com.google.guava/guava "18.0"]]
   :profiles {:dev {:resource-paths ["test/resources"]}
              :1.5 {:dependencies [[org.clojure/clojure "1.5.1"]]}
-             :1.7 {:dependencies [[org.clojure/clojure "1.7.0-alpha5"]]}}
+             :1.7 {:dependencies [[org.clojure/clojure "1.7.0-RC2"]]}}
   :aliases  {"all" ["with-profile" "dev:dev,1.5:dev,1.7"]}
   :source-paths ["src/clojure"]
   :java-source-paths ["src/java"]
