@@ -1,4 +1,4 @@
-(defproject clojurewerkz/urly "2.0.0-SNAPSHOT"
+(defproject clojurewerkz/urly "2.0.0-alpha6-SNAPSHOT"
   :description "A tiny Clojure library that parses URIs, URLs and relative values that real world HTML may contain"
   :min-lein-version "2.5.1"
   :license {:name "Eclipse Public License"}
